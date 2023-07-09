@@ -1,0 +1,17 @@
+version: "3"
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: ./app
+        target: /usr/src/app
+    #"react-app"の部分がプロジェクト名になる
+    command: sh -c "cd licsss-component-v1 && npm start && npm run storybook"
+    ports:
+      - 3000:3000
+      - 6006:6006
+    stdin_open: true #標準入力をコンテナと紐付ける
