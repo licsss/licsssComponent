@@ -7,10 +7,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - type: bind
-        source: ./app
+        source: ./app/licsss-component-v1
         target: /usr/src/app
     #"react-app"の部分がプロジェクト名になる
-    command: sh -c "cd licsss-component-v1 && npm start && npm run storybook"
+    command: sh -c "npm run storybook"
     ports:
       - 3000:3000
       - 6006:6006
