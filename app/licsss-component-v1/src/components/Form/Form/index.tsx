@@ -1,5 +1,5 @@
 import React from "react";
-import Bootstrap from "react-bootstrap";
+import Bootstrap, { Form } from "react-bootstrap";
 
 export interface FormProps extends Bootstrap.FormProps {}
 export default React.forwardRef(
@@ -25,7 +25,7 @@ export default React.forwardRef(
       if (!props.onSubmit) return;
       return await props.onSubmit(e);
     }
-
-    return <Bootstrap.Form {...Prop} validated={Validated} ref={ref} />;
+    console.log(Bootstrap);
+    return <Form {...Prop} validated={Validated} ref={ref} />;
   }
 );
