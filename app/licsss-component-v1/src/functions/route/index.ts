@@ -8,7 +8,7 @@
  * @param {boolean} [containDomain=false]
  * @return {*}  {string}
  */
-export default function route(
+export function route(
   __ROUTES__: Record<string, string>,
   routeName: string,
   parameters: Record<string, string> = {},

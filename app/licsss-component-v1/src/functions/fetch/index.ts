@@ -1,4 +1,4 @@
-import { cookie, createKey } from "./../";
+import { cookie, createKey } from "./../common";
 import { ApiType, ResponseType } from "./index.d";
 
 /**
