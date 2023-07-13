@@ -25,7 +25,6 @@ export default React.forwardRef(
       if (!props.onSubmit) return;
       return await props.onSubmit(e);
     }
-    console.log(Bootstrap);
     return <Form {...Prop} validated={Validated} ref={ref} />;
   }
 );
