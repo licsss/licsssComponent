@@ -39,7 +39,7 @@ const conf = [
       "react-bootstrap",
       "react/jsx-runtime",
     ],
-  } /*
+  },
   {
     input: "dist/cjs/types/index.d.ts",
     output: [{ file: "dist/cjs/index.d.ts", format: "cjs" }],
@@ -49,7 +49,7 @@ const conf = [
     input: "dist/esm/types/index.d.ts",
     output: [{ file: "dist/esm/index.d.ts", format: "esm" }],
     plugins: [dts()],
-  },*/,
+  },
 ];
 
 export default conf;
