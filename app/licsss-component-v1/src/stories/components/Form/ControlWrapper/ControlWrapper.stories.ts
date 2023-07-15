@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import ControlWrapper from "../../../../components/Form/ControlWrapper";
 import { FormControlBasic } from "../Control/Control.stories";
 import { sortJSON } from "../../../../functions";
+import { FormElementWrapperBasic } from "../ElementWrapper/ElementWrapper.stories";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
@@ -17,14 +18,6 @@ type Story = StoryObj<typeof meta>;
 export const FormControlWrapperBasic: Story = {
   args: sortJSON({
     ...FormControlBasic.args,
-    label: "label",
-    maxLength: 50,
-    description: "",
-    required: true,
-    disabled: false,
-    isValid: false,
-    validMessage: "",
-    isInvalid: false,
-    invalidMessage: "",
+    ...FormElementWrapperBasic.args,
   }),
 };

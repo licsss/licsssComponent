@@ -1,29 +1,23 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Control from "../../../../components/Form/Control";
 import { sortJSON } from "../../../../functions";
+import ElementWrapper from "../../../../components/Form/ElementWrapper";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
-  title: "Form/Control",
-  component: Control,
+  title: "Form/ElementWrapper",
+  component: ElementWrapper,
   tags: ["autodocs"],
-} satisfies Meta<typeof Control>;
+} satisfies Meta<typeof ElementWrapper>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const FormControlBasic: Story = {
+export const FormElementWrapperBasic: Story = {
   args: sortJSON({
-    as: "input",
-    type: "text",
-    maxLength: 50,
+    label: "label",
+    description: "description",
     required: true,
-    disabled: false,
-    isValid: false,
-    isInvalid: false,
-    placeholder: "",
-    validMessage: "",
-    invalidMessage: "",
+    parent: {},
   }),
 };
