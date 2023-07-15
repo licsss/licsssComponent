@@ -1,5 +1,5 @@
 import React from "react";
-import Bootstrap, { Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import Control, { FormControlProps } from "../Control";
 
 export interface FormControlWrapperProps extends FormControlProps {
@@ -14,11 +14,19 @@ export default React.forwardRef(
     props: FormControlWrapperProps,
     ref: React.ForwardedRef<HTMLInputElement>
   ): JSX.Element => {
-    const Prop: Bootstrap.FormControlProps = {
+    const {
+      validMessage,
+      invalidMessage,
+      label,
+      description,
+      parent,
+      ...Prop
+    }: FormControlWrapperProps = {
       placeholder: props.label,
       ...props,
       onChange: onChange,
     };
+    if (!Prop.placeholder) Prop.placeholder = props.label;
 
     const [Cnt, setCnt] = React.useState<number>(
       String(
@@ -31,16 +39,16 @@ export default React.forwardRef(
       if (props.onChange) props.onChange(e);
     }
     return (
-      <div {...props.parent}>
+      <div {...parent}>
         <Form.Label>
-          {props.label}
+          {label}
           {props.required && <span className="text-danger">＊</span>}
-          <Form.Text className={"d-block ps-1"}>{props.description}</Form.Text>
+          <Form.Text className={"d-block ps-1"}>{description}</Form.Text>
         </Form.Label>
         <Control ref={ref} {...Prop} />
-        <Form.Control.Feedback>{props.validMessage}</Form.Control.Feedback>
+        <Form.Control.Feedback>{validMessage}</Form.Control.Feedback>
         <Form.Control.Feedback type="invalid">
-          {props.invalidMessage}
+          {invalidMessage}
         </Form.Control.Feedback>
         <div
           className={"form-control-info " + (props.maxLength ? "" : "d-none")}

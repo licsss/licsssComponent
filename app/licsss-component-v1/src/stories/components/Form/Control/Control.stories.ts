@@ -22,5 +22,6 @@ export const FormControlBasic: Story = {
     disabled: false,
     isValid: false,
     isInvalid: false,
+    placeholder: "",
   }),
 };

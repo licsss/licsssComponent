@@ -10,6 +10,12 @@ export default React.forwardRef(
     props: FormControlProps,
     ref: React.ForwardedRef<HTMLInputElement>
   ): JSX.Element => {
-    return <FormControl {...props} ref={ref} />;
+    return (
+      <FormControl
+        {...props}
+        maxLength={props.maxLength || undefined}
+        ref={ref}
+      />
+    );
   }
 );
