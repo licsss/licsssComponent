@@ -9,7 +9,7 @@ services:
       - type: bind
         source: ./app/licsss-component-v1
         target: /usr/src/app
-    command: sh -c "npm run storybook -s ./src"
+    command: sh -c "npm run storybook"
     ports:
       - 3000:3000
       - 6006:6006
