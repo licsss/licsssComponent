@@ -103,3 +103,16 @@ export function number_format(number: number): string {
     maximumFractionDigits: 20,
   });
 }
+
+/**
+ * JSONキーによる並び替え
+ *
+ * @export
+ * @param {object} json
+ * @return {*}  {object}
+ */
+export function sortJSON(json: object): object | any {
+  return Object.fromEntries(
+    Object.entries(json).sort((a, b) => a[0].charCodeAt(0) - b[0].charCodeAt(0))
+  );
+}

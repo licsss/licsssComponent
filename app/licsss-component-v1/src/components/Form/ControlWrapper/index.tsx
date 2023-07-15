@@ -4,7 +4,10 @@ import Control, { FormControlProps } from "../Control";
 
 export interface FormControlWrapperProps extends FormControlProps {
   label: string;
+  description?: string;
   parent?: {};
+  validMessage?: React.ReactNode;
+  invalidMessage?: React.ReactNode;
 }
 export default React.forwardRef(
   (
@@ -32,14 +35,17 @@ export default React.forwardRef(
         <Form.Label>
           {props.label}
           {props.required && <span className="text-danger">＊</span>}
+          <Form.Text className={"d-block ps-1"}>{props.description}</Form.Text>
         </Form.Label>
         <Control ref={ref} {...Prop} />
-        <Form.Control.Feedback>valid</Form.Control.Feedback>
-        <Form.Control.Feedback type="invalid">invalid</Form.Control.Feedback>
+        <Form.Control.Feedback>{props.validMessage}</Form.Control.Feedback>
+        <Form.Control.Feedback type="invalid">
+          {props.invalidMessage}
+        </Form.Control.Feedback>
         <div
           className={"form-control-info " + (props.maxLength ? "" : "d-none")}
         >
-          {Cnt}
+          {`${Cnt}/${props.maxLength}文字`}
         </div>
       </div>
     );
