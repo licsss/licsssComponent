@@ -3,9 +3,11 @@ import { ResponseType } from "../../../functions";
 
 export interface FormContextProps<T = ResponseType> {
   Response?: T;
+  setResponse: (response: T | undefined) => void;
 }
 export default React.createContext<FormContextProps>({
   Response: undefined,
+  setResponse: () => "",
 });
 
 export interface UseFormProps<T = ResponseType> extends FormContextProps<T> {

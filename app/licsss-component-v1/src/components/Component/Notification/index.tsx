@@ -16,6 +16,8 @@ export default React.forwardRef(
   ): React.ReactElement => {
     const NotificationContextValue: UseNotificationProps = useNotification({
       Notifications: props.Notifications || {},
+      addNotification: () => "",
+      removeNotification: () => "",
     });
     return (
       <NotificationContext.Provider value={NotificationContextValue}>

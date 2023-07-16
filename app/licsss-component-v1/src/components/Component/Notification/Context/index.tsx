@@ -8,9 +8,13 @@ export interface NotificationProps {
 }
 export interface NotificationContextProps {
   Notifications: { [s: string]: NotificationProps };
+  addNotification: (notification: NotificationProps) => string;
+  removeNotification: (key: string) => void;
 }
 export default React.createContext<NotificationContextProps>({
   Notifications: {},
+  addNotification: () => "",
+  removeNotification: () => "",
 });
 
 export interface UseNotificationProps {
