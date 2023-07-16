@@ -9,7 +9,6 @@ services:
       - type: bind
         source: ./app/licsss-component-v1
         target: /usr/src/app
-    #"react-app"の部分がプロジェクト名になる
     command: sh -c "npm run storybook"
     ports:
       - 3000:3000

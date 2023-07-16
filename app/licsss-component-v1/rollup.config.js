@@ -1,9 +1,10 @@
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
-const pkg = require("./package.json");
-/*
-let modules = [
+import postcss from "rollup-plugin-postcss";
+import pkg from "./package.json" assert { type: "json" };
+
+const conf = [
   {
     input: "src/index.ts",
     output: [
@@ -24,33 +25,31 @@ let modules = [
       }),
       typescript({
         tsconfig: "./tsconfig.json",
-        exclude: ["** / __tests__; /**"],
+        exclude: ["**/__tests__/**"],
+      }),
+      postcss({
+        extract: "css/main.css",
+        sourceMap: true,
       }),
     ],
-    external: ["react", "react-dom"],
+    external: [
+      "react",
+      "react-dom",
+      "bootstrap",
+      "react-bootstrap",
+      "react/jsx-runtime",
+    ],
   },
   {
-    input: "./dist/cjs/types/index.d.ts",
+    input: "dist/cjs/types/index.d.ts",
     output: [{ file: "dist/cjs/index.d.ts", format: "cjs" }],
     plugins: [dts()],
   },
   {
-    input: "./dist/esm/types/index.d.ts",
+    input: "dist/esm/types/index.d.ts",
     output: [{ file: "dist/esm/index.d.ts", format: "esm" }],
     plugins: [dts()],
   },
-];*/
-let modules = [
-  {
-    input: "src/export.ts",
-    preserverModules: true,
-    output: {
-      dir: "dist/cjs",
-      format: "cjs",
-      exports: "named",
-      sourcemap: true,
-    },
-    plugins: [],
-  },
 ];
-export default modules;
+
+export default conf;
