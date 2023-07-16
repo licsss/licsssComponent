@@ -1,44 +1,93 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Bootstrap, { Form } from "react-bootstrap";
+import FormContext, { UseFormProps, useForm } from "../Context";
+import { ResponseType } from "../../../functions";
+import Alert, { AlertProps } from "../../Component/Alert";
 
-export interface FormProps extends Bootstrap.FormProps {}
+export interface FormProps extends Bootstrap.FormProps {
+  successMessage?: React.ReactElement | false;
+  Response?: ResponseType;
+}
 export default React.forwardRef(
   (
-    { validated = false, noValidate = true, ...props }: FormProps,
+    {
+      validated = false,
+      noValidate = true,
+      onSubmit = undefined,
+      successMessage = false,
+      Response = undefined,
+      ...props
+    }: FormProps,
     ref: React.ForwardedRef<HTMLFormElement>
-  ): JSX.Element => {
-    const [Prop, setProp] = useState<FormProps>({
-      ...props,
-      onSubmit: onSubmit,
-      validated: validated,
-      noValidate: noValidate,
-    });
+  ): React.ReactElement => {
+    const FormContextValue: UseFormProps<ResponseType> =
+      useForm<ResponseType>();
+    const [Validated, setValidated] = React.useState<boolean>(validated);
 
-    useEffect(() => {
-      setProp({
-        ...Prop,
-        onSubmit: onSubmit,
-        validated: validated,
-        noValidate: noValidate,
-      });
-    }, [props, validated, noValidate]);
-    function changeValidated() {
-      Prop["validated"] = !Prop["validated"];
-      setProp({ ...Prop });
-    }
-    async function onSubmit(
+    React.useEffect(() => {
+      setValidated(validated);
+    }, [validated]);
+
+    async function doSubmit(
       e: React.FormEvent<HTMLFormElement>
     ): Promise<void> {
       e.preventDefault();
       if (!e.currentTarget.checkValidity()) {
         e.stopPropagation();
-        changeValidated();
+        setValidated(true);
         return;
       }
-      changeValidated();
-      if (!props.onSubmit) return;
-      return await props.onSubmit(e);
+      setValidated(false);
+      if (onSubmit) await onSubmit(e);
+      if (Response) FormContextValue.setResponse(Response);
     }
-    return <Form {...Prop} ref={ref} />;
+    return (
+      <FormContext.Provider value={FormContextValue}>
+        <Form
+          {...props}
+          ref={ref}
+          validated={Validated}
+          noValidate={noValidate}
+          onSubmit={doSubmit}
+        />
+      </FormContext.Provider>
+    );
+  }
+);
+
+export interface FormNotificationProps {
+  Response: UseFormProps;
+  successMessage?: React.ReactElement | false;
+}
+export const FormNotification = React.forwardRef(
+  (
+    props: FormNotificationProps,
+    ref: React.ForwardedRef<HTMLDivElement>
+  ): React.ReactElement => {
+    if (!props.Response.Response || props.successMessage === false)
+      return <></>;
+    let AlertProp: AlertProps = {};
+    if (props.Response.Response.status.result) {
+      AlertProp["name"] = "info";
+      AlertProp["variant"] = "success";
+      AlertProp["children"] = props.successMessage || "処理が完了しました";
+    } else {
+      AlertProp["name"] = "exclamation";
+      AlertProp["Heading"] = (
+        <>
+          {`[${props.Response.Response.error?.abstract}]${props.Response.Response.error?.title}`}
+        </>
+      );
+      AlertProp["children"] = (
+        <ul>
+          {props.Response.Response.error?.messages.map(
+            (message: string): React.ReactElement => (
+              <li key={message}>{message}</li>
+            )
+          )}
+        </ul>
+      );
+    }
+    return <Alert {...AlertProp} ref={ref} />;
   }
 );

@@ -2,19 +2,50 @@ import React from "react";
 import Bootstrap, { Alert, Col, Row } from "react-bootstrap";
 import Icon, { SvgName } from "../Icon";
 
-export type AlertProps = Bootstrap.AlertProps & AlertChildrenProps & {};
+export type AlertProps = Bootstrap.AlertProps &
+  AlertChildrenProps & {
+    Heading?: React.ReactElement;
+  };
 export default React.forwardRef(
   (
-    { name, width, heigth, children, className = "", ...props }: AlertProps,
+    {
+      name,
+      width,
+      heigth,
+      children,
+      className = "",
+      variant,
+      Heading,
+      ...props
+    }: AlertProps,
     ref: React.ForwardedRef<HTMLDivElement>
   ): React.ReactElement => {
+    function getVariant(): string {
+      if (variant) return variant;
+      switch (name) {
+        case "info":
+          return "info";
+        case "check":
+          return "warning";
+        case "exclamation":
+          return "danger";
+      }
+      return "primary";
+    }
     return (
       <Alert
         ref={ref}
+        variant={getVariant()}
         {...props}
         className={`position-static px-2 py-3 ${className}`}
       >
         <AlertChildren name={name} width={width} heigth={heigth}>
+          {Heading && (
+            <>
+              <Alert.Heading>{Heading}</Alert.Heading>
+              <hr />
+            </>
+          )}
           {children}
         </AlertChildren>
       </Alert>
