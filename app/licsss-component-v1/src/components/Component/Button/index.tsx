@@ -1,9 +1,9 @@
 import React from "react";
 import Bootstrap, { Button, Col, Row } from "react-bootstrap";
-import Icon from "../Icon";
+import Icon, { SvgName } from "../Icon";
 
 export interface ButtonChildrenProps extends React.PropsWithChildren {
-  mode?: "normal" | "add" | "edit" | "trash";
+  mode?: SvgName;
 }
 export type ButtonProps = Bootstrap.ButtonProps & ButtonChildrenProps & {};
 export default React.forwardRef(
