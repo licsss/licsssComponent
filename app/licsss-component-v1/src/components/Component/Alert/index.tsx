@@ -1,5 +1,5 @@
 import React from "react";
-import Bootstrap, { Alert, Col, Row } from "react-bootstrap";
+import Bootstrap, { Alert } from "react-bootstrap";
 import Icon, { SvgName } from "../Icon";
 
 export type AlertProps = Bootstrap.AlertProps &
