@@ -3,6 +3,7 @@ import Form, { FormProps } from "../../../../components/Form/Form";
 import { sortJSON } from "../../../../functions";
 import ControlWrapper from "../../../../components/Form/ControlWrapper";
 import SelectWrapper from "../../../../components/Form/SelectWrapper";
+import Button from "../../../../components/Component/Button";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
@@ -17,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const FormBasic: Story = {
   args: sortJSON({
-    validated: true,
+    validated: false,
   }),
 };
 
@@ -30,6 +31,7 @@ function FormElement(props: FormProps): JSX.Element {
         required={true}
         options={[{ value: "1", label: "one" }]}
       />
+      <Button mode="add" type="submit" />
     </Form>
   );
 }

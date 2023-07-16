@@ -11,9 +11,9 @@ export default React.forwardRef(
     props: ButtonProps,
     ref: React.ForwardedRef<HTMLButtonElement>
   ): JSX.Element => {
-    const { mode, children, ...ButtonProps }: ButtonProps = props;
+    const { mode, children, className, ...ButtonProps }: ButtonProps = props;
     return (
-      <Button {...ButtonProps} ref={ref}>
+      <Button {...ButtonProps} className={`mt-2 ${className || ""}`} ref={ref}>
         <ButtonChildren mode={props.mode}>{children}</ButtonChildren>
       </Button>
     );
