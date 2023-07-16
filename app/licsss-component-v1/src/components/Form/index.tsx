@@ -5,7 +5,11 @@ import Form, {
   FormNotificationProps,
   FormProps,
 } from "./Form";
-import Context, { FormContextProps, UseFormProps, useForm } from "./Context";
+import FormContext, {
+  FormContextProps,
+  UseFormProps,
+  useForm,
+} from "./Context";
 import ControlWrapper, { FormControlWrapperProps } from "./ControlWrapper";
 import ElementWrapper, { FormElementWrapperProps } from "./ElementWrapper";
 import Select, { FormSelectProps } from "./Select";
@@ -30,7 +34,7 @@ export interface FormsInterface {
 const Forms: FormsInterface = {
   Form: Form,
   FormNotification: FormNotification,
-  FormContext: Context,
+  FormContext: FormContext,
   useForm: useForm,
   Control: Control,
   ControlWrapper: ControlWrapper,

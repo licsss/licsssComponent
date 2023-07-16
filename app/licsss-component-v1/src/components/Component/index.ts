@@ -11,7 +11,7 @@ import Notification, {
   NotificationToast,
   NotificationToastProps,
 } from "./Notification";
-import Context, {
+import NotificationContext, {
   NotificationContextProps,
   UseNotificationProps,
   useNotification,
@@ -46,7 +46,7 @@ const Components: ComponentsInterface = {
   svgs: svgs,
   Notification: Notification,
   NotificationToast: NotificationToast,
-  NotificationContext: Context,
+  NotificationContext: NotificationContext,
   useNotification: useNotification,
   Toast: Toast,
   ToastContainer: ToastContainer,
