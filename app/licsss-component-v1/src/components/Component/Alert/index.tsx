@@ -61,18 +61,23 @@ export interface AlertChildrenProps extends React.PropsWithChildren {
 export const AlertChildren = React.forwardRef(
   (
     { width = 32, heigth = 32, ...props }: AlertChildrenProps,
-    ref: React.ForwardedRef<HTMLDivElement>
+    ref: React.ForwardedRef<HTMLTableElement>
   ): React.ReactElement => {
     if (!props.name || props.name === "normal") return <div ref={ref} />;
     return (
-      <div ref={ref}>
-        <Row>
-          <Col xs="auto" className="pe-1">
-            <Icon name={props.name} width={width} height={heigth} />
-          </Col>
-          <Col xs>{props.children}</Col>
-        </Row>
-      </div>
+      <table ref={ref} className="w-100">
+        <tr>
+          <td className="w-0 align-middle p-0 pe-3">
+            <Icon
+              name={props.name}
+              width={width}
+              height={heigth}
+              className="mt-auto align-middle"
+            />
+          </td>
+          <td>{props.children}</td>
+        </tr>
+      </table>
     );
   }
 );

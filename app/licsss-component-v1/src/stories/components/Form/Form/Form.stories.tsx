@@ -17,14 +17,31 @@ type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const FormBasic: Story = {
-  args: sortJSON({
+  args: sortJSON<FormProps>({
     validated: false,
+    successMessage: <>success</>,
+    Response: {
+      status: {
+        result: true,
+        code: 200,
+        nonce: "",
+      },
+      payloads: {
+        test: "test",
+      },
+      error: {
+        abstract: "ERROR",
+        code: 400000,
+        title: "エラー",
+        messages: ["エラー詳細"],
+      },
+    },
   }),
 };
 
 function FormElement(props: FormProps): JSX.Element {
   return (
-    <Form {...props}>
+    <Form {...props} Response={props.Response}>
       <ControlWrapper label="control" required={true} />
       <SelectWrapper
         label="select"
