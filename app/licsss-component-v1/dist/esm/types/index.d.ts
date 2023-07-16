@@ -1,6 +1,37 @@
+/// <reference types="react" />
 import * as Functions from "./functions";
-declare const _default: {
-    components: import("./components/Form").FormsInterface & import("./components/Component").ComponentsInterface;
-    functions: typeof Functions;
+declare const returnLibrary: {
+    createHeader(headers?: object | undefined): HeadersInit;
+    checkNonce(expectedNonce: string, receivedNonce: string | undefined): boolean;
+    route(__ROUTES__: Record<string, string>, routeName: string, parameters?: Record<string, string>, containDomain?: boolean): string;
+    createQueries(parameters?: Record<string, string>): string;
+    cookies(): Record<string, string>;
+    cookie(key?: string | undefined): string | Record<string, string> | undefined;
+    createKey(): string;
+    isString(value: any): boolean;
+    date_format(date?: string | Date | null | undefined, format?: string): string;
+    number_format(number: number): string;
+    sortJSON<T = object>(json: T): T;
+    Form: import("react").ForwardRefExoticComponent<import("./components/Form/Form").FormProps & import("react").RefAttributes<HTMLFormElement>>;
+    FormNotification: import("react").ForwardRefExoticComponent<import("./components/Form/Form").FormNotificationProps>;
+    FormContext: import("react").Context<import("./components/Form/Context").FormContextProps<Functions.ResponseType<object>>>;
+    useForm: <T_1>() => import("./components/Form/Context").UseFormProps<T_1>;
+    Control: import("react").ForwardRefExoticComponent<import("./components/Form/Control").FormControlProps & import("react").RefAttributes<HTMLInputElement | HTMLTextAreaElement>>;
+    ControlWrapper: import("react").ForwardRefExoticComponent<import("./components/Form/ControlWrapper").FormControlWrapperProps>;
+    ElementWrapper: import("react").ForwardRefExoticComponent<import("./components/Form/ElementWrapper").FormElementWrapperProps>;
+    Select: import("react").ForwardRefExoticComponent<import("./components/Form/Select").FormSelectProps>;
+    SelectWrapper: import("react").ForwardRefExoticComponent<import("./components/Form/SelectWrapper").FormSelectWrapperProps>;
+    Alert: import("react").ForwardRefExoticComponent<import("./components/Component/Alert").AlertProps>;
+    AlertChildren: import("react").ForwardRefExoticComponent<import("./components/Component/Alert").AlertChildrenProps>;
+    Button: import("react").ForwardRefExoticComponent<import("./components/Component/Button").ButtonProps>;
+    ButtonChildren: import("react").ForwardRefExoticComponent<import("./components/Component/Button").ButtonChildrenProps>;
+    Icon: import("react").ForwardRefExoticComponent<import("./components/Component/Icon").IconProps>;
+    svgs: Record<import("./components/Component/Icon").SvgName, import("./components/Component/Icon").IconProps>;
+    Notification: import("react").ForwardRefExoticComponent<import("./components/Component/Notification").NotiProps>;
+    NotificationToast: import("react").ForwardRefExoticComponent<import("./components/Component/Notification").NotificationToastProps>;
+    NotificationContext: import("react").Context<import("./components/Component/Notification/Context").NotificationContextProps>;
+    useNotification: (props: import("./components/Component/Notification/Context").NotificationContextProps) => import("./components/Component/Notification/Context").UseNotificationProps;
+    Toast: import("react").ForwardRefExoticComponent<import("./components/Component/Toast").ToastProps>;
+    ToastContainer: import("react").ForwardRefExoticComponent<import("./components/Component/Toast").ToastContainerProps>;
 };
-export default _default;
+export default returnLibrary;

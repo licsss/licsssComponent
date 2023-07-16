@@ -1,4 +1,5 @@
 import { ComponentsInterface } from "./Component";
 import { FormsInterface } from "./Form";
-declare const Component: FormsInterface & ComponentsInterface;
+export type ComponentInterface = FormsInterface & ComponentsInterface;
+declare const Component: ComponentInterface;
 export default Component;

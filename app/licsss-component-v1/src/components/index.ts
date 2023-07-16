@@ -1,7 +1,8 @@
 import Components, { ComponentsInterface } from "./Component";
 import Forms, { FormsInterface } from "./Form";
 
-const Component: FormsInterface & ComponentsInterface = {
+export type ComponentInterface = FormsInterface & ComponentsInterface;
+const Component: ComponentInterface = {
   ...Forms,
   ...Components,
 };

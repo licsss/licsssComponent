@@ -525,12 +525,6 @@ const Forms = {
 
 const Component = Object.assign(Object.assign({}, Forms), Components);
 
-const returnLibrary = () => {
-    return {
-        components: Component,
-        functions: Functions,
-    };
-};
-var index = returnLibrary();
+const returnLibrary = Object.assign(Object.assign({}, Component), Functions);
 
-module.exports = index;
+module.exports = returnLibrary;

@@ -63,7 +63,8 @@ export const AlertChildren = React.forwardRef(
     { width = 32, heigth = 32, ...props }: AlertChildrenProps,
     ref: React.ForwardedRef<HTMLTableElement>
   ): React.ReactElement => {
-    if (!props.name || props.name === "normal") return <div ref={ref} />;
+    if (!props.name || props.name === "normal")
+      return <div ref={ref}>{props.children}</div>;
     return (
       <table ref={ref} className="w-100">
         <tr>

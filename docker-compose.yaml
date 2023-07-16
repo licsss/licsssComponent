@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - type: bind
-        source: ./app/licsss-component-v1
+        source: ./app
         target: /usr/src/app
-    command: sh -c "npm run storybook"
+    command: sh -c "cd licsss-component-v1 && npm run storybook"
     ports:
       - 3000:3000
       - 6006:6006
