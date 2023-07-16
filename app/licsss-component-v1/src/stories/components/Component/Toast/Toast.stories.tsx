@@ -1,23 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { sortJSON } from "../../../../functions";
-import Icon, { IconProps } from "../../../../components/Component/Icon";
+import Toast, { ToastProps } from "../../../../components/Component/Toast";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
-  title: "Component/Icon",
-  component: Icon,
+  title: "Component/Toast",
+  component: Toast,
   tags: ["autodocs"],
-} satisfies Meta<typeof Icon>;
+} satisfies Meta<typeof Toast>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const ComponentIconBasic: Story = {
-  args: sortJSON<IconProps>({
-    name: "add",
-    width: 16,
-    height: 16,
-    className: "",
+export const ComponentToastBasic: Story = {
+  args: sortJSON<ToastProps>({
+    header: <>title</>,
+    children: (
+      <ul>
+        <li>通知1</li>
+        <li>通知2</li>
+      </ul>
+    ),
   }),
 };
