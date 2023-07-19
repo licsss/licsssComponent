@@ -33,7 +33,10 @@ export const FormBasic: Story = {
         abstract: "ERROR",
         code: 400000,
         title: "エラー",
-        messages: ["エラー詳細"],
+        messages: {
+          name: ["name is required"],
+          select: ["selet is required"],
+        },
       },
     },
   }),
@@ -42,8 +45,9 @@ export const FormBasic: Story = {
 function FormElement(props: FormProps): JSX.Element {
   return (
     <Form {...props} Response={props.Response}>
-      <ControlWrapper label="control" required={true} />
+      <ControlWrapper name="name" label="control" required={true} />
       <SelectWrapper
+        name="select"
         label="select"
         required={true}
         options={[{ value: "1", label: "one" }]}

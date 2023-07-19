@@ -1,18 +1,20 @@
 import React from "react";
 import Bootstrap, { FormControl } from "react-bootstrap";
+import Feedback from "../Feedback";
 
 export interface FormControlProps extends Bootstrap.FormControlProps {
   maxLength?: number;
   required?: boolean;
-  validMessage?: React.ReactNode;
-  invalidMessage?: React.ReactNode;
+  validMessage?: React.ReactElement | string;
+  invalidMessage?: React.ReactElement | string;
+  name: string;
 }
 export default React.forwardRef(
   (
     props: FormControlProps,
     ref: React.ForwardedRef<HTMLInputElement | HTMLTextAreaElement>
   ): JSX.Element => {
-    const { validMessage, invalidMessage, ...Prop } = {
+    const { validMessage, invalidMessage, ...Prop }: FormControlProps = {
       ...props,
       onChange: onChange,
     };
@@ -31,10 +33,11 @@ export default React.forwardRef(
     return (
       <>
         <FormControl {...Prop} ref={ref} />
-        <FormControl.Feedback>{validMessage}</FormControl.Feedback>
-        <FormControl.Feedback type="invalid">
-          {invalidMessage}
-        </FormControl.Feedback>
+        <Feedback
+          validMessage={validMessage}
+          invalidMessage={invalidMessage}
+          name={Prop.name}
+        />
         <div
           className={"form-control-info " + (Prop.maxLength ? "" : "d-none")}
         >

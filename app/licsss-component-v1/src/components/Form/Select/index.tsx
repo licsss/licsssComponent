@@ -1,10 +1,12 @@
 import React from "react";
-import Bootstrap, { FormControl, FormSelect } from "react-bootstrap";
+import Bootstrap, { FormSelect } from "react-bootstrap";
+import Feedback from "../Feedback";
 
 export interface FormSelectProps extends Bootstrap.FormSelectProps {
   required?: boolean;
-  validMessage?: React.ReactNode;
-  invalidMessage?: React.ReactNode;
+  validMessage?: React.ReactElement | string;
+  invalidMessage?: React.ReactElement | string;
+  name: string;
   options?: { value: string; label: string }[];
 }
 export default React.forwardRef(
@@ -36,10 +38,11 @@ export default React.forwardRef(
           {options?.map((option) => <option key={option.value} {...option} />)}
           {children}
         </FormSelect>
-        <FormControl.Feedback>{validMessage}</FormControl.Feedback>
-        <FormControl.Feedback type="invalid">
-          {invalidMessage}
-        </FormControl.Feedback>
+        <Feedback
+          name={SelectProp.name}
+          validMessage={validMessage}
+          invalidMessage={invalidMessage}
+        />
       </>
     );
   }

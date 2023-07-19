@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Control from "../../../../components/Form/Control";
+import Control, { FormControlProps } from "../../../../components/Form/Control";
 import { sortJSON } from "../../../../functions";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
@@ -14,7 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const FormControlBasic: Story = {
-  args: sortJSON({
+  args: sortJSON<FormControlProps>({
     as: "input",
     type: "text",
     maxLength: 50,
@@ -25,5 +25,6 @@ export const FormControlBasic: Story = {
     placeholder: "",
     validMessage: "valid message",
     invalidMessage: "invalid message",
+    name: "name",
   }),
 };
