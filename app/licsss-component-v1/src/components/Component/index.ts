@@ -21,6 +21,7 @@ import Toast, {
   ToastContainerProps,
   ToastProps,
 } from "./Toast";
+import Pagination, { PaginationProps } from "./Pagination";
 
 export interface ComponentsInterface {
   Alert: React.ForwardRefExoticComponent<AlertProps>;
@@ -35,6 +36,7 @@ export interface ComponentsInterface {
   useNotification: (props: NotificationContextProps) => UseNotificationProps;
   Toast: React.ForwardRefExoticComponent<ToastProps>;
   ToastContainer: React.ForwardRefExoticComponent<ToastContainerProps>;
+  Pagination: React.ForwardRefExoticComponent<PaginationProps>;
 }
 
 const Components: ComponentsInterface = {
@@ -50,5 +52,6 @@ const Components: ComponentsInterface = {
   useNotification: useNotification,
   Toast: Toast,
   ToastContainer: ToastContainer,
+  Pagination: Pagination,
 };
 export default Components;
