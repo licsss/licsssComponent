@@ -19,3 +19,7 @@ Released under the MIT license
 
 - v1.0.0
   - 公開
+- v1.1.0
+  - 次のコンポーネント追加
+    - Modal
+    - Paginate
