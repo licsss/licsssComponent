@@ -3,6 +3,53 @@ import * as React from 'react';
 import React__default, { HTMLAttributes } from 'react';
 import Bootstrap from 'react-bootstrap';
 
+interface ModalFooterProps extends React__default.PropsWithChildren {
+    className?: string;
+}
+
+interface ModalBodyProps extends React__default.PropsWithChildren {
+    className?: string;
+}
+
+interface ModalHeaderProps extends Bootstrap.ModalHeaderProps {
+}
+
+interface ModalProps extends Bootstrap.ModalProps {
+    Header?: ModalHeaderProps;
+    children?: React__default.ReactNode;
+    Body?: ModalBodyProps;
+    Footer?: ModalFooterProps;
+}
+
+type ResponseStatusType = {
+    result: boolean;
+    nonce: string;
+    code: number;
+};
+type ResponseErrorType = {
+    abstract: string;
+    title: string;
+    code: number;
+    messages: string[];
+};
+type ResponseMetaType = {
+    currentPage: number;
+    lastPage: number;
+    length: number;
+    getLength: number;
+    per: number;
+};
+type ResponseType<T = object> = {
+    status: ResponseStatusType;
+    payloads?: T;
+    error?: ResponseErrorType;
+};
+
+interface PaginationProps extends Bootstrap.PaginationProps {
+    meta: ResponseMetaType;
+    setPage: React__default.Dispatch<React__default.SetStateAction<number>>;
+}
+
 interface ToastProps extends Bootstrap.ToastProps {
     header?: React__default.ReactNode;
 }
@@ -92,23 +139,6 @@ interface FormControlProps extends Bootstrap.FormControlProps {
 
 type FormControlWrapperProps = FormElementWrapperProps & FormControlProps & {};
 
-type ResponseStatusType = {
-    result: boolean;
-    nonce: string;
-    code: number;
-};
-type ResponseErrorType = {
-    abstract: string;
-    title: string;
-    code: number;
-    messages: string[];
-};
-type ResponseType<T = object> = {
-    status: ResponseStatusType;
-    payloads?: T;
-    error?: ResponseErrorType;
-};
-
 interface FormContextProps<T = ResponseType> {
     Response?: T;
     setResponse: (response: T | undefined) => void;
@@ -132,6 +162,10 @@ declare const returnLibrary: {
     checkNonce(expectedNonce: string, receivedNonce: string | undefined): boolean;
     route(__ROUTES__: Record<string, string>, routeName: string, parameters?: Record<string, string>, containDomain?: boolean): string;
     createQueries(parameters?: Record<string, string>): string;
+    getQueries(path: string): {
+        [s: string]: string;
+    };
+    getQuery(key: string, path?: string | undefined): string | undefined;
     cookies(): Record<string, string>;
     cookie(key?: string | undefined): string | Record<string, string> | undefined;
     createKey(): string;
@@ -160,6 +194,11 @@ declare const returnLibrary: {
     useNotification: (props: NotificationContextProps) => UseNotificationProps;
     Toast: React.ForwardRefExoticComponent<ToastProps>;
     ToastContainer: React.ForwardRefExoticComponent<ToastContainerProps>;
+    Pagination: React.ForwardRefExoticComponent<PaginationProps>;
+    Modal: React.ForwardRefExoticComponent<ModalProps>;
+    ModalHeader: React.ForwardRefExoticComponent<ModalHeaderProps>;
+    ModalBody: React.ForwardRefExoticComponent<ModalBodyProps>;
+    ModalFooter: React.ForwardRefExoticComponent<ModalFooterProps>;
 };
 
 export { returnLibrary as default };

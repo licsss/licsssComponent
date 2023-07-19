@@ -5,6 +5,11 @@ import { IconProps, SvgName } from "./Icon";
 import { NotiProps, NotificationToastProps } from "./Notification";
 import { NotificationContextProps, UseNotificationProps } from "./Notification/Context";
 import { ToastContainerProps, ToastProps } from "./Toast";
+import { PaginationProps } from "./Pagination";
+import { ModalProps } from "./Modal";
+import { ModalHeaderProps } from "./Modal/Header";
+import { ModalBodyProps } from "./Modal/Body";
+import { ModalFooterProps } from "./Modal/Footer";
 export interface ComponentsInterface {
     Alert: React.ForwardRefExoticComponent<AlertProps>;
     AlertChildren: React.ForwardRefExoticComponent<AlertChildrenProps>;
@@ -18,6 +23,11 @@ export interface ComponentsInterface {
     useNotification: (props: NotificationContextProps) => UseNotificationProps;
     Toast: React.ForwardRefExoticComponent<ToastProps>;
     ToastContainer: React.ForwardRefExoticComponent<ToastContainerProps>;
+    Pagination: React.ForwardRefExoticComponent<PaginationProps>;
+    Modal: React.ForwardRefExoticComponent<ModalProps>;
+    ModalHeader: React.ForwardRefExoticComponent<ModalHeaderProps>;
+    ModalBody: React.ForwardRefExoticComponent<ModalBodyProps>;
+    ModalFooter: React.ForwardRefExoticComponent<ModalFooterProps>;
 }
 declare const Components: ComponentsInterface;
 export default Components;

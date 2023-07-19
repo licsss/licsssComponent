@@ -115,7 +115,7 @@ var Alert = React.forwardRef((_a, ref) => {
 const AlertChildren = React.forwardRef((_a, ref) => {
     var { width = 32, heigth = 32 } = _a, props = __rest(_a, ["width", "heigth"]);
     if (!props.name || props.name === "normal")
-        return jsxRuntime.jsx("div", { ref: ref });
+        return jsxRuntime.jsx("div", Object.assign({ ref: ref }, { children: props.children }));
     return (jsxRuntime.jsx("table", Object.assign({ ref: ref, className: "w-100" }, { children: jsxRuntime.jsxs("tr", { children: [jsxRuntime.jsx("td", Object.assign({ className: "w-0 align-middle p-0 pe-3" }, { children: jsxRuntime.jsx(Icon, { name: props.name, width: width, height: heigth, className: "mt-auto align-middle" }) })), jsxRuntime.jsx("td", { children: props.children })] }) })));
 });
 
@@ -330,6 +330,36 @@ function createQueries(parameters = {}) {
     });
     return query.join("&");
 }
+/**
+ * 全クエリ取得
+ *
+ * @export
+ * @param {string} path
+ * @return {*}  {{ [s: string]: string }}
+ */
+function getQueries(path) {
+    let queries = {};
+    let splited_question = path.split("?");
+    let splited_equal = splited_question[splited_question.length - 1].split("&");
+    splited_equal.forEach((val) => {
+        let splited = val.split("=");
+        if (splited.length > 1)
+            queries[splited[0]] = splited[1];
+    });
+    return queries;
+}
+/**
+ * クエリ取得
+ *
+ * @export
+ * @param {string} key
+ * @param {(string | undefined)} [path=undefined]
+ * @return {*}  {(string | undefined)}
+ */
+function getQuery(key, path = undefined) {
+    let queries = getQueries(path === undefined ? window.location.href : path);
+    return queries[key];
+}
 
 var Functions = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -340,6 +370,8 @@ var Functions = /*#__PURE__*/Object.freeze({
     createKey: createKey,
     createQueries: createQueries,
     date_format: date_format,
+    getQueries: getQueries,
+    getQuery: getQuery,
     isString: isString,
     number_format: number_format,
     route: route,
@@ -400,6 +432,40 @@ const NotificationToast = React.forwardRef((_a, ref) => {
     return jsxRuntime.jsx(Toast, Object.assign({ show: Show }, ToastProps, { onClose: close, ref: ref }));
 });
 
+var Pagination = React.forwardRef((_a, ref) => {
+    var { meta, setPage, className } = _a, props = __rest(_a, ["meta", "setPage", "className"]);
+    const [TopPage, setTopPage] = React.useState(true);
+    const [LastPage, setLastPage] = React.useState(true);
+    React.useEffect(() => {
+        setTopPage(meta.currentPage === 1);
+        setLastPage(meta.currentPage === meta.lastPage);
+    }, [meta]);
+    function changePage(e) {
+        e.preventDefault();
+        setPage(Number(getQuery("page", e.currentTarget.pathname)));
+    }
+    return (jsxRuntime.jsx("div", Object.assign({ className: "w-100", ref: ref }, { children: jsxRuntime.jsxs(reactBootstrap.Pagination, Object.assign({ className: "mx-auto mt-3 position-static " + className }, props, { children: [jsxRuntime.jsx(reactBootstrap.Pagination.First, { href: "?page=1", onClick: changePage, disabled: TopPage }), jsxRuntime.jsx(reactBootstrap.Pagination.Prev, { href: TopPage ? `?page=1` : `?page=${meta.currentPage - 1}`, onClick: changePage, disabled: TopPage }), jsxRuntime.jsx(reactBootstrap.Pagination.Item, Object.assign({ disabled: true }, { children: meta.currentPage })), jsxRuntime.jsx(reactBootstrap.Pagination.Next, { href: `?page=${meta.currentPage + 1}`, onClick: changePage, disabled: LastPage }), jsxRuntime.jsx(reactBootstrap.Pagination.Last, { href: LastPage ? `?page=${meta.lastPage}` : `?page=${meta.lastPage}`, onClick: changePage, disabled: LastPage })] })) })));
+});
+
+var ModalHeader = React.forwardRef((_a, ref) => {
+    var { closeButton = true } = _a, props = __rest(_a, ["closeButton"]);
+    return jsxRuntime.jsx(reactBootstrap.ModalHeader, Object.assign({ closeButton: closeButton }, props, { ref: ref }));
+});
+
+var ModalFooter = React.forwardRef((props, ref) => {
+    return jsxRuntime.jsx(reactBootstrap.ModalFooter, Object.assign({}, props, { ref: ref }));
+});
+
+var ModalBody = React.forwardRef((_a, ref) => {
+    var props = __rest(_a, []);
+    return jsxRuntime.jsx(reactBootstrap.ModalBody, Object.assign({}, props, { ref: ref }));
+});
+
+const _default = React.forwardRef((_a, ref) => {
+    var { animation = true, scrollable = true, centered = true, Header, Body, Footer, children } = _a, props = __rest(_a, ["animation", "scrollable", "centered", "Header", "Body", "Footer", "children"]);
+    return (jsxRuntime.jsxs(reactBootstrap.Modal, Object.assign({ animation: animation, scrollable: scrollable, centered: centered }, props, { ref: ref }, { children: [Header !== undefined && jsxRuntime.jsx(ModalHeader, Object.assign({}, Header)), jsxRuntime.jsx(ModalBody, { children: children }), Body !== undefined && jsxRuntime.jsx(ModalBody, Object.assign({}, Body)), Footer !== undefined && jsxRuntime.jsx(ModalFooter, Object.assign({}, Footer))] })));
+});
+
 const Components = {
     Alert: Alert,
     AlertChildren: AlertChildren,
@@ -413,6 +479,11 @@ const Components = {
     useNotification: useNotification,
     Toast: Toast,
     ToastContainer: ToastContainer,
+    Pagination: Pagination,
+    Modal: _default,
+    ModalHeader: ModalHeader,
+    ModalBody: ModalBody,
+    ModalFooter: ModalFooter,
 };
 
 var Control = React.forwardRef((props, ref) => {

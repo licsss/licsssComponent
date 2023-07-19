@@ -5,6 +5,10 @@ declare const returnLibrary: {
     checkNonce(expectedNonce: string, receivedNonce: string | undefined): boolean;
     route(__ROUTES__: Record<string, string>, routeName: string, parameters?: Record<string, string>, containDomain?: boolean): string;
     createQueries(parameters?: Record<string, string>): string;
+    getQueries(path: string): {
+        [s: string]: string;
+    };
+    getQuery(key: string, path?: string | undefined): string | undefined;
     cookies(): Record<string, string>;
     cookie(key?: string | undefined): string | Record<string, string> | undefined;
     createKey(): string;
@@ -33,5 +37,10 @@ declare const returnLibrary: {
     useNotification: (props: import("./components/Component/Notification/Context").NotificationContextProps) => import("./components/Component/Notification/Context").UseNotificationProps;
     Toast: import("react").ForwardRefExoticComponent<import("./components/Component/Toast").ToastProps>;
     ToastContainer: import("react").ForwardRefExoticComponent<import("./components/Component/Toast").ToastContainerProps>;
+    Pagination: import("react").ForwardRefExoticComponent<import("./components/Component/Pagination").PaginationProps>;
+    Modal: import("react").ForwardRefExoticComponent<import("./components/Component/Modal").ModalProps>;
+    ModalHeader: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Header").ModalHeaderProps>;
+    ModalBody: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Body").ModalBodyProps>;
+    ModalFooter: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Footer").ModalFooterProps>;
 };
 export default returnLibrary;

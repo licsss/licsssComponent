@@ -1,6 +1,6 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import React from 'react';
-import { Alert as Alert$1, Button as Button$1, Row, Col, Toast as Toast$1, ToastContainer as ToastContainer$1, FormControl, Form as Form$1, FormSelect } from 'react-bootstrap';
+import { Alert as Alert$1, Button as Button$1, Row, Col, Toast as Toast$1, ToastContainer as ToastContainer$1, Pagination as Pagination$1, ModalHeader as ModalHeader$1, ModalFooter as ModalFooter$1, ModalBody as ModalBody$1, Modal, FormControl, Form as Form$1, FormSelect } from 'react-bootstrap';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -113,7 +113,7 @@ var Alert = React.forwardRef((_a, ref) => {
 const AlertChildren = React.forwardRef((_a, ref) => {
     var { width = 32, heigth = 32 } = _a, props = __rest(_a, ["width", "heigth"]);
     if (!props.name || props.name === "normal")
-        return jsx("div", { ref: ref });
+        return jsx("div", Object.assign({ ref: ref }, { children: props.children }));
     return (jsx("table", Object.assign({ ref: ref, className: "w-100" }, { children: jsxs("tr", { children: [jsx("td", Object.assign({ className: "w-0 align-middle p-0 pe-3" }, { children: jsx(Icon, { name: props.name, width: width, height: heigth, className: "mt-auto align-middle" }) })), jsx("td", { children: props.children })] }) })));
 });
 
@@ -328,6 +328,36 @@ function createQueries(parameters = {}) {
     });
     return query.join("&");
 }
+/**
+ * 全クエリ取得
+ *
+ * @export
+ * @param {string} path
+ * @return {*}  {{ [s: string]: string }}
+ */
+function getQueries(path) {
+    let queries = {};
+    let splited_question = path.split("?");
+    let splited_equal = splited_question[splited_question.length - 1].split("&");
+    splited_equal.forEach((val) => {
+        let splited = val.split("=");
+        if (splited.length > 1)
+            queries[splited[0]] = splited[1];
+    });
+    return queries;
+}
+/**
+ * クエリ取得
+ *
+ * @export
+ * @param {string} key
+ * @param {(string | undefined)} [path=undefined]
+ * @return {*}  {(string | undefined)}
+ */
+function getQuery(key, path = undefined) {
+    let queries = getQueries(path === undefined ? window.location.href : path);
+    return queries[key];
+}
 
 var Functions = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -338,6 +368,8 @@ var Functions = /*#__PURE__*/Object.freeze({
     createKey: createKey,
     createQueries: createQueries,
     date_format: date_format,
+    getQueries: getQueries,
+    getQuery: getQuery,
     isString: isString,
     number_format: number_format,
     route: route,
@@ -398,6 +430,40 @@ const NotificationToast = React.forwardRef((_a, ref) => {
     return jsx(Toast, Object.assign({ show: Show }, ToastProps, { onClose: close, ref: ref }));
 });
 
+var Pagination = React.forwardRef((_a, ref) => {
+    var { meta, setPage, className } = _a, props = __rest(_a, ["meta", "setPage", "className"]);
+    const [TopPage, setTopPage] = React.useState(true);
+    const [LastPage, setLastPage] = React.useState(true);
+    React.useEffect(() => {
+        setTopPage(meta.currentPage === 1);
+        setLastPage(meta.currentPage === meta.lastPage);
+    }, [meta]);
+    function changePage(e) {
+        e.preventDefault();
+        setPage(Number(getQuery("page", e.currentTarget.pathname)));
+    }
+    return (jsx("div", Object.assign({ className: "w-100", ref: ref }, { children: jsxs(Pagination$1, Object.assign({ className: "mx-auto mt-3 position-static " + className }, props, { children: [jsx(Pagination$1.First, { href: "?page=1", onClick: changePage, disabled: TopPage }), jsx(Pagination$1.Prev, { href: TopPage ? `?page=1` : `?page=${meta.currentPage - 1}`, onClick: changePage, disabled: TopPage }), jsx(Pagination$1.Item, Object.assign({ disabled: true }, { children: meta.currentPage })), jsx(Pagination$1.Next, { href: `?page=${meta.currentPage + 1}`, onClick: changePage, disabled: LastPage }), jsx(Pagination$1.Last, { href: LastPage ? `?page=${meta.lastPage}` : `?page=${meta.lastPage}`, onClick: changePage, disabled: LastPage })] })) })));
+});
+
+var ModalHeader = React.forwardRef((_a, ref) => {
+    var { closeButton = true } = _a, props = __rest(_a, ["closeButton"]);
+    return jsx(ModalHeader$1, Object.assign({ closeButton: closeButton }, props, { ref: ref }));
+});
+
+var ModalFooter = React.forwardRef((props, ref) => {
+    return jsx(ModalFooter$1, Object.assign({}, props, { ref: ref }));
+});
+
+var ModalBody = React.forwardRef((_a, ref) => {
+    var props = __rest(_a, []);
+    return jsx(ModalBody$1, Object.assign({}, props, { ref: ref }));
+});
+
+const _default = React.forwardRef((_a, ref) => {
+    var { animation = true, scrollable = true, centered = true, Header, Body, Footer, children } = _a, props = __rest(_a, ["animation", "scrollable", "centered", "Header", "Body", "Footer", "children"]);
+    return (jsxs(Modal, Object.assign({ animation: animation, scrollable: scrollable, centered: centered }, props, { ref: ref }, { children: [Header !== undefined && jsx(ModalHeader, Object.assign({}, Header)), jsx(ModalBody, { children: children }), Body !== undefined && jsx(ModalBody, Object.assign({}, Body)), Footer !== undefined && jsx(ModalFooter, Object.assign({}, Footer))] })));
+});
+
 const Components = {
     Alert: Alert,
     AlertChildren: AlertChildren,
@@ -411,6 +477,11 @@ const Components = {
     useNotification: useNotification,
     Toast: Toast,
     ToastContainer: ToastContainer,
+    Pagination: Pagination,
+    Modal: _default,
+    ModalHeader: ModalHeader,
+    ModalBody: ModalBody,
+    ModalFooter: ModalFooter,
 };
 
 var Control = React.forwardRef((props, ref) => {
