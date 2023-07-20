@@ -44,7 +44,7 @@ jobs:
       - name: output
         run: |
           echo "zipping"
-          zip dist.zip dist
+          zip dist.zip -r dist
           echo "zipped"
           
       # タグを生成する 「{YYYY.MM.DD}-{当日リリース回数}」
