@@ -80,10 +80,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist.zip
+          asset_path: ./app/licsss-component-v1/dist.zip
           asset_name: build.zip
           asset_content_type: application/zip
           
       - name: publish
         if: ${{ always() }}
         run: npm publish
+        
+      - if: ${{ always() }}
+        run: echo "finished"
