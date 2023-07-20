@@ -26,17 +26,15 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: main # 手動実行時のブランチを指定しておく
-
-      - name: step1
-        run: |
-          pwd
           
       - uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: npm
+          working-directory: app/licsss-component-v1
 
       - run: |
+          pwd
           npm ci
           npm run build
 
