@@ -37,19 +37,19 @@ jobs:
           npm ci
           npm run build
 
+      - name: output
+        run: |
+          ls
+          zip dist.zip ./dist
+          echo "zipped"
+          ls
+          npm publish
+          
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with: 
           name: dist
           path: dist
-      
-      - name: output
-        run: |
-          ls
-          zip dist
-          ls
-          npm publish
-          
       # タグを生成する 「{YYYY.MM.DD}-{当日リリース回数}」
       - name: Generate release tag
         id: release_tag
