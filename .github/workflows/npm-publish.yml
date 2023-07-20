@@ -71,6 +71,7 @@ jobs:
           draft: false
           prerelease: false
 
+      - run: ls
       - name: Upload Release Asset
         id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1.0.2
