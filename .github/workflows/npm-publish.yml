@@ -46,7 +46,7 @@ jobs:
           echo "zipping"
           zip dist.zip dist
           echo "zipped"
-          s
+          
       # タグを生成する 「{YYYY.MM.DD}-{当日リリース回数}」
       - name: Generate release tag
         id: release_tag
