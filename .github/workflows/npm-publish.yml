@@ -116,6 +116,8 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }} 
           protocol: ftps
           port: ${{ secrets.FTP_PORT }} 
+          local-dir: ./app/licsss-component-v1/
+          remote-dir: ./storybook/
           exclude: |
             **/.git*
             **/.git*/**
@@ -127,17 +129,18 @@ jobs:
             Dockerfile
             ReadMe.md
             docker-compose.yml
-            **/app/.cache/**
-            **/app/licsss-component-v1/.storybook/**
-            **/app/licsss-component-v1/dist/**
-            **/app/licsss-component-v1/public/**
-            **/app/licsss-component-v1/src/**
-            **/app/licsss-component-v1/static/**
-            **/app/licsss-component-v1/.babelrc
-            **/app/licsss-component-v1/.gitignore
-            **/app/licsss-component-v1/.npmignore
-            **/app/licsss-component-v1/README.md
-            **/app/licsss-component-v1/pacakege*
-            **/app/licsss-component-v1/*config*
+            **/.cache/**
+            **/.storybook/**
+            **/dist/**
+            **/public/**
+            **/src/**
+            **/static/**
+            **/.babelrc
+            **/.gitignore
+            **/.npmignore
+            **/README.md
+            **/package*
+            **/*config*
+            *.zip
       - if: ${{ always() }}
         run: echo "finished"
