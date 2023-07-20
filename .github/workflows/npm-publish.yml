@@ -1,0 +1,72 @@
+name: bundle
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TZ: 'Asia/Tokyo'
+      GH_REPO: "https://api.github.com/repos/${{ github.repository }}"
+      
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main # 手動実行時のブランチを指定しておく
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: |
+          cd app/licsss-component-v1
+          npm ci
+          npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with: 
+          name: dist
+          path: dist
+          
+      # タグを生成する 「{YYYY.MM.DD}-{当日リリース回数}」
+      - name: Generate release tag
+        id: release_tag
+        run: |
+          today=$(date +'%Y.%m.%d.%H.%M.%S')
+          echo "release_tag=$today" >> $GITHUB_OUTPUT
+
+      - name: create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with: 
+          tag_name: ${{ steps.release_tag.outputs.release_tag }}
+          release_name: ${{ steps.release_tag.outputs.release_tag }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset-linux
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./redoc-static.html
+          asset_name: redoc-static.html
+          asset_content_type: text/html
+          
+      - name: publish
+        run: npm publish
+        
