@@ -1,6 +1,6 @@
 import React from "react";
 import Bootstrap, { FormControl } from "react-bootstrap";
-import Feedback from "../Feedback";
+import Feedback, { FeedbackContext, useFeedback } from "../Feedback";
 
 export interface FormControlProps extends Bootstrap.FormControlProps {
   maxLength?: number;
@@ -25,14 +25,26 @@ export default React.forwardRef(
         props.value ? props.value : props.defaultValue ? props.defaultValue : ""
       ).length
     );
+    const FeedbackValue = useFeedback({
+      name: Prop.name,
+      invalidMessages: false,
+    });
 
     function onChange(e: React.ChangeEvent<HTMLInputElement>): void {
       setCnt(String(e.currentTarget.value).length);
       if (props.onChange) props.onChange(e);
     }
     return (
-      <>
-        <FormControl {...Prop} ref={ref} />
+      <FeedbackContext.Provider value={FeedbackValue}>
+        <FormControl
+          {...Prop}
+          ref={ref}
+          className={`
+            ${Prop.className || ""}${
+              FeedbackValue.invalidMessages !== false ? " border-danger" : ""
+            }
+          `}
+        />
         <Feedback
           validMessage={validMessage}
           invalidMessage={invalidMessage}
@@ -43,7 +55,7 @@ export default React.forwardRef(
         >
           {`${Cnt}/${Prop.maxLength}文字`}
         </div>
-      </>
+      </FeedbackContext.Provider>
     );
   }
 );

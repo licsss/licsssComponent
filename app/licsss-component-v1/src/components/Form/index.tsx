@@ -14,6 +14,13 @@ import ControlWrapper, { FormControlWrapperProps } from "./ControlWrapper";
 import ElementWrapper, { FormElementWrapperProps } from "./ElementWrapper";
 import Select, { FormSelectProps } from "./Select";
 import SelectWrapper, { FormSelectWrapperProps } from "./SelectWrapper";
+import Feedback, {
+  FeedbackContext,
+  FeedbackContextInterface,
+  FeedbackProps,
+  UseFeedback,
+  useFeedback,
+} from "./Feedback";
 
 export interface FormsInterface {
   Form: React.ForwardRefExoticComponent<
@@ -30,6 +37,9 @@ export interface FormsInterface {
   ElementWrapper: React.ForwardRefExoticComponent<FormElementWrapperProps>;
   Select: React.ForwardRefExoticComponent<FormSelectProps>;
   SelectWrapper: React.ForwardRefExoticComponent<FormSelectWrapperProps>;
+  Feedback: (props: FeedbackProps) => React.ReactElement;
+  FeedbackContext: React.Context<UseFeedback>;
+  useFeedback: (props: FeedbackContextInterface) => UseFeedback;
 }
 const Forms: FormsInterface = {
   Form: Form,
@@ -41,6 +51,9 @@ const Forms: FormsInterface = {
   ElementWrapper: ElementWrapper,
   Select: Select,
   SelectWrapper: SelectWrapper,
+  Feedback: Feedback,
+  FeedbackContext: FeedbackContext,
+  useFeedback: useFeedback,
 };
 
 export default Forms;
