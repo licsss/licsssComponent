@@ -9,44 +9,46 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     defaults:
       run:
-        working-directory: 'app/licsss-component-v1'
-        
+        working-directory: "app/licsss-component-v1"
+
     permissions:
       contents: write
 
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      TZ: 'Asia/Tokyo'
+      TZ: "Asia/Tokyo"
       GH_REPO: "https://api.github.com/repos/${{ github.repository }}"
       NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-      
+
     steps:
       - uses: actions/checkout@v3
         with:
           ref: main # 手動実行時のブランチを指定しておく
-          
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: 'app/licsss-component-v1/package-lock.json'
-          registry-url: 'https://registry.npmjs.org'
-          scope       : '@licsss'
-          always-auth : true
+          cache-dependency-path: "app/licsss-component-v1/package-lock.json"
+          registry-url: "https://registry.npmjs.org"
+          scope: "@licsss"
+          always-auth: true
 
       - run: |
           npm ci
           npm run build
+          npm run build-storybook
 
       - name: output
         run: |
           echo "zipping"
           zip dist.zip -r dist
+          zip storybook.zip -r storybook-static
           echo "zipped"
-          
+
       # タグを生成する 「{YYYY.MM.DD}-{当日リリース回数}」
       - name: Generate release tag
         id: release_tag
@@ -59,21 +61,27 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with: 
+        with:
           tag_name: ${{ steps.release_tag.outputs.release_tag }}
           release_name: ${{ steps.release_tag.outputs.release_tag }}
           draft: false
           prerelease: false
 
       - run: ls
-          
-      - name: Upload artifact
+
+      - name: Upload artifact dist
         uses: actions/upload-artifact@v3
-        with: 
+        with:
           name: "licsssComponent-${{ steps.release_tag.outputs.release_tag }}"
           path: ./app/licsss-component-v1/dist.zip
-          
-      - name: Upload Release Asset
+
+      - name: Upload artifact storybook
+        uses: actions/upload-artifact@v3
+        with:
+          name: "licsssComponent-${{ steps.release_tag.outputs.release_tag }}"
+          path: ./app/licsss-component-v1/storybook.zip
+
+      - name: Upload Release Asset dist
         id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1.0.2
         env:
@@ -83,11 +91,22 @@ jobs:
           asset_path: ./app/licsss-component-v1/dist.zip
           asset_name: build.zip
           asset_content_type: application/zip
-          
+
+      - name: Upload Release Asset storybook
+        id: upload-release-asset-storybook
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./app/licsss-component-v1/storybook.zip
+          asset_name: storybook.zip
+          asset_content_type: application/zip
+
       - name: publish
         continue-on-error: true
         if: ${{ always() }}
         run: npm publish
-        
+
       - if: ${{ always() }}
         run: echo "finished"
