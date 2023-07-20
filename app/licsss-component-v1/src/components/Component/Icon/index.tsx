@@ -11,12 +11,12 @@ export default React.forwardRef(
   (
     props: IconProps,
     ref: React.ForwardedRef<SVGSVGElement>
-  ): React.ReactNode => {
+  ): React.ReactElement => {
     let { name, ...Props }: IconProps = {
       ...{},
       ...props,
     };
-    if (name === "normal" || !name) return props.children;
+    if (name === "normal" || !name) return <>{props.children}</>;
 
     if (svgs[name]) Props = { ...props, ...svgs[name] };
     if (!Props["width"]) Props["width"] = 16;

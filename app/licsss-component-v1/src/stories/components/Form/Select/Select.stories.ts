@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { sortJSON } from "../../../../functions";
-import Select from "../../../../components/Form/Select";
+import Select, { FormSelectProps } from "../../../../components/Form/Select";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
@@ -13,8 +13,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const FormControlBasic: Story = {
-  args: sortJSON({
+export const FormSlectBasic: Story = {
+  args: sortJSON<FormSelectProps>({
+    name: "select",
     required: true,
     disabled: false,
     isValid: false,

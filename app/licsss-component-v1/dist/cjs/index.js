@@ -51,7 +51,7 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
 var Icon = React.forwardRef((props, ref) => {
     let _a = Object.assign({}, props), { name } = _a, Props = __rest(_a, ["name"]);
     if (name === "normal" || !name)
-        return props.children;
+        return jsxRuntime.jsx(jsxRuntime.Fragment, { children: props.children });
     if (svgs[name])
         Props = Object.assign(Object.assign({}, props), svgs[name]);
     if (!Props["width"])
@@ -486,19 +486,6 @@ const Components = {
     ModalFooter: ModalFooter,
 };
 
-var Control = React.forwardRef((props, ref) => {
-    const _a = Object.assign(Object.assign({}, props), { onChange: onChange }), { validMessage, invalidMessage } = _a, Prop = __rest(_a, ["validMessage", "invalidMessage"]);
-    if (!Prop.maxLength)
-        Prop.maxLength = undefined;
-    const [Cnt, setCnt] = React.useState(String(props.value ? props.value : props.defaultValue ? props.defaultValue : "").length);
-    function onChange(e) {
-        setCnt(String(e.currentTarget.value).length);
-        if (props.onChange)
-            props.onChange(e);
-    }
-    return (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [jsxRuntime.jsx(reactBootstrap.FormControl, Object.assign({}, Prop, { ref: ref })), jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, { children: validMessage }), jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, Object.assign({ type: "invalid" }, { children: invalidMessage })), jsxRuntime.jsx("div", Object.assign({ className: "form-control-info " + (Prop.maxLength ? "" : "d-none") }, { children: `${Cnt}/${Prop.maxLength}文字` }))] }));
-});
-
 var FormContext = React.createContext({
     Response: undefined,
     setResponse: () => "",
@@ -513,6 +500,64 @@ function useForm() {
         setResponse: setResponse,
     };
 }
+
+function Feedback(props) {
+    const FormContext$1 = React.useContext(FormContext);
+    const invalidMessages = React.useContext(FeedbackContext);
+    React.useEffect(() => {
+        if (!invalidMessages.changeResponse)
+            return;
+        invalidMessages.changeResponse(FormContext$1.Response);
+    }, [FormContext$1.Response, invalidMessages]);
+    return (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [props.children, props.validMessage && (jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, { children: props.validMessage })), invalidMessages.invalidMessages !== false && (jsxRuntime.jsx("div", Object.assign({ className: "text-danger" }, { children: jsxRuntime.jsx("ul", { children: invalidMessages.invalidMessages.map((message) => (jsxRuntime.jsx("li", { children: message }, `${props.name}-${message}`))) }) }))), props.invalidMessage && (jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, Object.assign({ type: "invalid" }, { children: props.invalidMessage })))] }));
+}
+const FeedbackContext = React.createContext({
+    name: "",
+    invalidMessages: false,
+    changeInvalidMessages: (p) => "",
+    changeResponse: (p) => "",
+});
+function useFeedback(props) {
+    const [invalidMessages, setInvalidMessages] = React.useState(props.invalidMessages);
+    function changeInvalidMessages(invalidMessages) {
+        setInvalidMessages(invalidMessages === false ? false : [...invalidMessages]);
+    }
+    function changeResponse(response) {
+        var _a, _b;
+        let invalidMessages = false;
+        if (response !== undefined &&
+            !response.status.result &&
+            ((_a = response.error) === null || _a === void 0 ? void 0 : _a.messages[props.name]) &&
+            Array.isArray((_b = response.error) === null || _b === void 0 ? void 0 : _b.messages[props.name]))
+            invalidMessages = response.error.messages[props.name];
+        changeInvalidMessages(invalidMessages);
+    }
+    return {
+        name: props.name,
+        invalidMessages: invalidMessages,
+        changeInvalidMessages: changeInvalidMessages,
+        changeResponse: changeResponse,
+    };
+}
+
+var Control = React.forwardRef((props, ref) => {
+    const _a = Object.assign(Object.assign({}, props), { onChange: onChange }), { validMessage, invalidMessage } = _a, Prop = __rest(_a, ["validMessage", "invalidMessage"]);
+    if (!Prop.maxLength)
+        Prop.maxLength = undefined;
+    const [Cnt, setCnt] = React.useState(String(props.value ? props.value : props.defaultValue ? props.defaultValue : "").length);
+    const FeedbackValue = useFeedback({
+        name: Prop.name,
+        invalidMessages: false,
+    });
+    function onChange(e) {
+        setCnt(String(e.currentTarget.value).length);
+        if (props.onChange)
+            props.onChange(e);
+    }
+    return (jsxRuntime.jsxs(FeedbackContext.Provider, Object.assign({ value: FeedbackValue }, { children: [jsxRuntime.jsx(reactBootstrap.FormControl, Object.assign({}, Prop, { ref: ref, className: `
+            ${Prop.className || ""}${FeedbackValue.invalidMessages !== false ? " border-danger" : ""}
+          ` })), jsxRuntime.jsx(Feedback, { validMessage: validMessage, invalidMessage: invalidMessage, name: Prop.name }), jsxRuntime.jsx("div", Object.assign({ className: "form-control-info " + (Prop.maxLength ? "" : "d-none") }, { children: `${Cnt}/${Prop.maxLength}文字` }))] })));
+});
 
 var Form = React.forwardRef((_a, ref) => {
     var { validated = false, noValidate = true, onSubmit = undefined, successMessage = false, Response = undefined } = _a, props = __rest(_a, ["validated", "noValidate", "onSubmit", "successMessage", "Response"]);
@@ -532,14 +577,17 @@ var Form = React.forwardRef((_a, ref) => {
             setValidated(false);
             if (onSubmit)
                 yield onSubmit(e);
-            if (Response)
+            if (Response) {
                 FormContextValue.setResponse(Response);
+                if (!Response.status.result)
+                    setValidated(true);
+            }
         });
     }
     return (jsxRuntime.jsxs(FormContext.Provider, Object.assign({ value: FormContextValue }, { children: [jsxRuntime.jsx(FormNotification, { Response: FormContextValue, successMessage: successMessage }), jsxRuntime.jsx(reactBootstrap.Form, Object.assign({}, props, { ref: ref, validated: Validated, noValidate: noValidate, onSubmit: doSubmit }))] })));
 });
 const FormNotification = React.forwardRef((props, ref) => {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     if (!props.Response.Response || props.successMessage === false)
         return jsxRuntime.jsx(jsxRuntime.Fragment, {});
     let AlertProp = {};
@@ -551,7 +599,9 @@ const FormNotification = React.forwardRef((props, ref) => {
     else {
         AlertProp["name"] = "exclamation";
         AlertProp["Heading"] = (jsxRuntime.jsx(jsxRuntime.Fragment, { children: `[${(_a = props.Response.Response.error) === null || _a === void 0 ? void 0 : _a.abstract}]${(_b = props.Response.Response.error) === null || _b === void 0 ? void 0 : _b.title}` }));
-        AlertProp["children"] = (jsxRuntime.jsx("ul", { children: (_c = props.Response.Response.error) === null || _c === void 0 ? void 0 : _c.messages.map((message) => (jsxRuntime.jsx("li", { children: message }, message))) }));
+        if (Array.isArray((_c = props.Response.Response.error) === null || _c === void 0 ? void 0 : _c.messages)) {
+            AlertProp["children"] = (jsxRuntime.jsx("ul", { children: (_d = props.Response.Response.error) === null || _d === void 0 ? void 0 : _d.messages.map((message) => (jsxRuntime.jsx("li", { children: message }, message))) }));
+        }
     }
     return jsxRuntime.jsx(Alert, Object.assign({}, AlertProp, { ref: ref }));
 });
@@ -570,11 +620,17 @@ var ControlWrapper = React.forwardRef((props, ref) => {
 
 var Select = React.forwardRef((props, ref) => {
     const _a = Object.assign(Object.assign({}, props), { onChange: onChange }), { validMessage, invalidMessage, children, options } = _a, SelectProp = __rest(_a, ["validMessage", "invalidMessage", "children", "options"]);
+    const FeedbackValue = useFeedback({
+        name: SelectProp.name,
+        invalidMessages: false,
+    });
     function onChange(e) {
         if (props.onChange)
             props.onChange(e);
     }
-    return (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [jsxRuntime.jsxs(reactBootstrap.FormSelect, Object.assign({}, SelectProp, { ref: ref }, { children: [jsxRuntime.jsx("option", { label: "\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044", className: SelectProp.required ? "d-none" : "" }), options === null || options === void 0 ? void 0 : options.map((option) => jsxRuntime.jsx("option", Object.assign({}, option), option.value)), children] })), jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, { children: validMessage }), jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, Object.assign({ type: "invalid" }, { children: invalidMessage }))] }));
+    return (jsxRuntime.jsxs(FeedbackContext.Provider, Object.assign({ value: FeedbackValue }, { children: [jsxRuntime.jsxs(reactBootstrap.FormSelect, Object.assign({}, SelectProp, { ref: ref, className: `
+            ${SelectProp.className || ""}${FeedbackValue.invalidMessages !== false ? " border-danger" : ""}
+          ` }, { children: [jsxRuntime.jsx("option", { label: "\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044", className: SelectProp.required ? "d-none" : "" }), options === null || options === void 0 ? void 0 : options.map((option) => jsxRuntime.jsx("option", Object.assign({}, option), option.value)), children] })), jsxRuntime.jsx(Feedback, { name: SelectProp.name, validMessage: validMessage, invalidMessage: invalidMessage })] })));
 });
 
 var SelectWrapper = React.forwardRef((props, ref) => {
@@ -592,6 +648,9 @@ const Forms = {
     ElementWrapper: ElementWrapper,
     Select: Select,
     SelectWrapper: SelectWrapper,
+    Feedback: Feedback,
+    FeedbackContext: FeedbackContext,
+    useFeedback: useFeedback,
 };
 
 const Component = Object.assign(Object.assign({}, Forms), Components);

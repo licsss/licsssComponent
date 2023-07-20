@@ -4,7 +4,9 @@ export interface FormContextProps<T = ResponseType> {
     Response?: T;
     setResponse: (response: T | undefined) => void;
 }
-declare const _default: React.Context<FormContextProps<ResponseType<object>>>;
+declare const _default: React.Context<FormContextProps<ResponseType<object, string[] | {
+    [key: string]: string[];
+}>>>;
 export default _default;
 export interface UseFormProps<T = ResponseType> extends FormContextProps<T> {
     Response: T | undefined;

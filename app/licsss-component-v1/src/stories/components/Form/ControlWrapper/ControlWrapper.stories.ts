@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ControlWrapper from "../../../../components/Form/ControlWrapper";
+import ControlWrapper, {
+  FormControlWrapperProps,
+} from "../../../../components/Form/ControlWrapper";
 import { FormControlBasic } from "../Control/Control.stories";
 import { sortJSON } from "../../../../functions";
 import { FormElementWrapperBasic } from "../ElementWrapper/ElementWrapper.stories";
@@ -16,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const FormControlWrapperBasic: Story = {
-  args: sortJSON({
+  args: sortJSON<FormControlWrapperProps>({
     ...FormControlBasic.args,
     ...FormElementWrapperBasic.args,
   }),

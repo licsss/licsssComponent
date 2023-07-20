@@ -26,11 +26,13 @@ type ResponseStatusType = {
     nonce: string;
     code: number;
 };
-type ResponseErrorType = {
+type ResponseErrorType<T = string[] | {
+    [key: string]: string[];
+}> = {
     abstract: string;
     title: string;
     code: number;
-    messages: string[];
+    messages: T;
 };
 type ResponseMetaType = {
     currentPage: number;
@@ -39,10 +41,12 @@ type ResponseMetaType = {
     getLength: number;
     per: number;
 };
-type ResponseType<T = object> = {
+type ResponseType<T = object, S = string[] | {
+    [key: string]: string[];
+}> = {
     status: ResponseStatusType;
     payloads?: T;
-    error?: ResponseErrorType;
+    error?: ResponseErrorType<S>;
 };
 
 interface PaginationProps extends Bootstrap.PaginationProps {
@@ -111,6 +115,22 @@ interface AlertChildrenProps extends React__default.PropsWithChildren {
     heigth?: number;
 }
 
+interface FeedbackProps extends React__default.PropsWithChildren {
+    validMessage?: React__default.ReactElement | string;
+    invalidMessage?: React__default.ReactElement | string;
+    name?: string;
+}
+interface FeedbackContextInterface {
+    name: string;
+    invalidMessages: string[] | false;
+}
+interface UseFeedback extends FeedbackContextInterface {
+    changeInvalidMessages: (props: string[] | false) => void;
+    changeResponse: (props: ResponseType<object, {
+        [key: string]: string[];
+    }> | undefined) => void;
+}
+
 interface FormElementWrapperProps extends React__default.PropsWithChildren {
     label: string;
     description?: string;
@@ -120,8 +140,9 @@ interface FormElementWrapperProps extends React__default.PropsWithChildren {
 
 interface FormSelectProps extends Bootstrap.FormSelectProps {
     required?: boolean;
-    validMessage?: React__default.ReactNode;
-    invalidMessage?: React__default.ReactNode;
+    validMessage?: React__default.ReactElement | string;
+    invalidMessage?: React__default.ReactElement | string;
+    name: string;
     options?: {
         value: string;
         label: string;
@@ -133,8 +154,9 @@ type FormSelectWrapperProps = FormElementWrapperProps & FormSelectProps & {};
 interface FormControlProps extends Bootstrap.FormControlProps {
     maxLength?: number;
     required?: boolean;
-    validMessage?: React__default.ReactNode;
-    invalidMessage?: React__default.ReactNode;
+    validMessage?: React__default.ReactElement | string;
+    invalidMessage?: React__default.ReactElement | string;
+    name: string;
 }
 
 type FormControlWrapperProps = FormElementWrapperProps & FormControlProps & {};
@@ -175,13 +197,18 @@ declare const returnLibrary: {
     sortJSON<T = object>(json: T): T;
     Form: React.ForwardRefExoticComponent<FormProps & React.RefAttributes<HTMLFormElement>>;
     FormNotification: React.ForwardRefExoticComponent<FormNotificationProps>;
-    FormContext: React.Context<FormContextProps<ResponseType<object>>>;
+    FormContext: React.Context<FormContextProps<ResponseType<object, string[] | {
+        [key: string]: string[];
+    }>>>;
     useForm: <T_1>() => UseFormProps<T_1>;
     Control: React.ForwardRefExoticComponent<FormControlProps & React.RefAttributes<HTMLInputElement | HTMLTextAreaElement>>;
     ControlWrapper: React.ForwardRefExoticComponent<FormControlWrapperProps>;
     ElementWrapper: React.ForwardRefExoticComponent<FormElementWrapperProps>;
     Select: React.ForwardRefExoticComponent<FormSelectProps>;
     SelectWrapper: React.ForwardRefExoticComponent<FormSelectWrapperProps>;
+    Feedback: (props: FeedbackProps) => React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+    FeedbackContext: React.Context<UseFeedback>;
+    useFeedback: (props: FeedbackContextInterface) => UseFeedback;
     Alert: React.ForwardRefExoticComponent<AlertProps>;
     AlertChildren: React.ForwardRefExoticComponent<AlertChildrenProps>;
     Button: React.ForwardRefExoticComponent<ButtonProps>;
