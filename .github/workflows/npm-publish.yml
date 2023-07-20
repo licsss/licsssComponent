@@ -117,7 +117,7 @@ jobs:
           protocol: ftps
           port: ${{ secrets.FTP_PORT }} 
           local-dir: ./app/licsss-component-v1/
-          remote-dir: ./storybook/
+          server-dir: ./storybook/
           exclude: |
             **/.git*
             **/.git*/**
