@@ -39,17 +39,17 @@ jobs:
 
       - name: output
         run: |
-          ls
+          echo "zipping"
           zip dist.zip ./dist
           echo "zipped"
-          ls
           npm publish
           
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with: 
           name: dist
-          path: dist
+          path: ./dist.zip
+          
       # タグを生成する 「{YYYY.MM.DD}-{当日リリース回数}」
       - name: Generate release tag
         id: release_tag
@@ -75,10 +75,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist
-          asset_name: redoc-static.html
-          asset_content_type: text/html
+          asset_path: ./dist.zip
+          asset_name: build.zip
+          asset_content_type: application/zip
           
-      - name: publish
-        run: npm publish
-        
