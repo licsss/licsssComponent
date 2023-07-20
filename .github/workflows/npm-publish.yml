@@ -34,7 +34,6 @@ jobs:
           cache-dependency-path: 'app/licsss-component-v1/package-lock.json'
 
       - run: |
-          pwd
           npm ci
           npm run build
 
@@ -43,6 +42,13 @@ jobs:
         with: 
           name: dist
           path: dist
+      
+      - name: output
+        run: |
+          ls
+          cd dist
+          ls
+         
           
       # タグを生成する 「{YYYY.MM.DD}-{当日リリース回数}」
       - name: Generate release tag
@@ -69,7 +75,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./redoc-static.html
+          asset_path: ./dist
           asset_name: redoc-static.html
           asset_content_type: text/html
           
