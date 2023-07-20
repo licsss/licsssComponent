@@ -27,6 +27,10 @@ jobs:
         with:
           ref: main # 手動実行時のブランチを指定しておく
 
+      - name: step1
+        run: |
+          pwd
+          
       - uses: actions/setup-node@v3
         with:
           node-version: 18
