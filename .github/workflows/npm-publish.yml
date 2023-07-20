@@ -44,15 +44,9 @@ jobs:
       - name: output
         run: |
           echo "zipping"
-          zip dist dist
+          zip dist.zip dist
           echo "zipped"
-          
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with: 
-          name: dist
-          path: dist.zip
-          
+          s
       # タグを生成する 「{YYYY.MM.DD}-{当日リリース回数}」
       - name: Generate release tag
         id: release_tag
@@ -72,6 +66,13 @@ jobs:
           prerelease: false
 
       - run: ls
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with: 
+          name: dist
+          path: dist.zip
+          
       - name: Upload Release Asset
         id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1.0.2
