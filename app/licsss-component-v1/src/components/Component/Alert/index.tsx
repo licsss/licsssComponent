@@ -67,17 +67,19 @@ export const AlertChildren = React.forwardRef(
       return <div ref={ref}>{props.children}</div>;
     return (
       <table ref={ref} className="w-100">
-        <tr>
-          <td className="w-0 align-middle p-0 pe-3">
-            <Icon
-              name={props.name}
-              width={width}
-              height={heigth}
-              className="mt-auto align-middle"
-            />
-          </td>
-          <td>{props.children}</td>
-        </tr>
+        <tbody>
+          <tr>
+            <td className="w-0 align-middle p-0 pe-3">
+              <Icon
+                name={props.name}
+                width={width}
+                height={heigth}
+                className="mt-auto align-middle"
+              />
+            </td>
+            <td>{props.children}</td>
+          </tr>
+        </tbody>
       </table>
     );
   }

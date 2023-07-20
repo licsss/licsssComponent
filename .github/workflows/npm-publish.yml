@@ -107,16 +107,16 @@ jobs:
         continue-on-error: true
         if: ${{ always() }}
         run: npm publish
-        
+
       - name: deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }} 
-          password: ${{ secrets.FTP_PASSWORD }} 
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
-          port: ${{ secrets.FTP_PORT }} 
-          local-dir: ./app/licsss-component-v1/
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: ./app/licsss-component-v1/storybook-static
           server-dir: ./storybook/
           exclude: |
             **/.git*
