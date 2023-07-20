@@ -44,7 +44,7 @@ jobs:
       - name: output
         run: |
           echo "zipping"
-          zip dist.zip ./dist
+          zip dist dist
           echo "zipped"
           
       - name: Upload artifact
