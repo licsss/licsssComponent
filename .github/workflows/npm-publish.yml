@@ -107,6 +107,37 @@ jobs:
         continue-on-error: true
         if: ${{ always() }}
         run: npm publish
-
+        
+      - name: deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }} 
+          password: ${{ secrets.FTP_PASSWORD }} 
+          protocol: ftps
+          port: ${{ secrets.FTP_PORT }} 
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.github/**
+            **/docs/**
+            **/src/**
+            .gitignore
+            Dockerfile
+            ReadMe.md
+            docker-compose.yml
+            **/app/.cache/**
+            **/app/licsss-component-v1/.storybook/**
+            **/app/licsss-component-v1/dist/**
+            **/app/licsss-component-v1/public/**
+            **/app/licsss-component-v1/src/**
+            **/app/licsss-component-v1/static/**
+            **/app/licsss-component-v1/.babelrc
+            **/app/licsss-component-v1/.gitignore
+            **/app/licsss-component-v1/.npmignore
+            **/app/licsss-component-v1/README.md
+            **/app/licsss-component-v1/pacakege*
+            **/app/licsss-component-v1/*config*
       - if: ${{ always() }}
         run: echo "finished"
