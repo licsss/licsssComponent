@@ -12,7 +12,7 @@ jobs:
     
     defaults:
       run:
-        working-directory: app/licsss-component-v1
+        working-directory: 'app/licsss-component-v1'
         
     permissions:
       contents: write
@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          working-directory: app/licsss-component-v1
+          cache-dependency-path: 'app/licsss-component-v1/package-lock.json'
 
       - run: |
           pwd
