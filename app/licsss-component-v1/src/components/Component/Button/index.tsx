@@ -10,7 +10,7 @@ export default React.forwardRef(
   (
     props: ButtonProps,
     ref: React.ForwardedRef<HTMLButtonElement>
-  ): JSX.Element => {
+  ): React.ReactElement => {
     const { mode, children, className, ...ButtonProps }: ButtonProps = props;
     return (
       <Button {...ButtonProps} className={`mt-2 ${className || ""}`} ref={ref}>
@@ -24,7 +24,7 @@ export const ButtonChildren = React.forwardRef(
   (
     props: ButtonChildrenProps,
     ref: React.ForwardedRef<HTMLDivElement>
-  ): React.ReactNode => {
+  ): React.ReactElement => {
     let Children: React.ReactNode = props.children;
     switch (props.mode) {
       case "add":

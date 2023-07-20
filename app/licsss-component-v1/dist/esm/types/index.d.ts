@@ -5,6 +5,10 @@ declare const returnLibrary: {
     checkNonce(expectedNonce: string, receivedNonce: string | undefined): boolean;
     route(__ROUTES__: Record<string, string>, routeName: string, parameters?: Record<string, string>, containDomain?: boolean): string;
     createQueries(parameters?: Record<string, string>): string;
+    getQueries(path: string): {
+        [s: string]: string;
+    };
+    getQuery(key: string, path?: string | undefined): string | undefined;
     cookies(): Record<string, string>;
     cookie(key?: string | undefined): string | Record<string, string> | undefined;
     createKey(): string;
@@ -14,13 +18,18 @@ declare const returnLibrary: {
     sortJSON<T = object>(json: T): T;
     Form: import("react").ForwardRefExoticComponent<import("./components/Form/Form").FormProps & import("react").RefAttributes<HTMLFormElement>>;
     FormNotification: import("react").ForwardRefExoticComponent<import("./components/Form/Form").FormNotificationProps>;
-    FormContext: import("react").Context<import("./components/Form/Context").FormContextProps<Functions.ResponseType<object>>>;
+    FormContext: import("react").Context<import("./components/Form/Context").FormContextProps<Functions.ResponseType<object, string[] | {
+        [key: string]: string[];
+    }>>>;
     useForm: <T_1>() => import("./components/Form/Context").UseFormProps<T_1>;
     Control: import("react").ForwardRefExoticComponent<import("./components/Form/Control").FormControlProps & import("react").RefAttributes<HTMLInputElement | HTMLTextAreaElement>>;
     ControlWrapper: import("react").ForwardRefExoticComponent<import("./components/Form/ControlWrapper").FormControlWrapperProps>;
     ElementWrapper: import("react").ForwardRefExoticComponent<import("./components/Form/ElementWrapper").FormElementWrapperProps>;
     Select: import("react").ForwardRefExoticComponent<import("./components/Form/Select").FormSelectProps>;
     SelectWrapper: import("react").ForwardRefExoticComponent<import("./components/Form/SelectWrapper").FormSelectWrapperProps>;
+    Feedback: (props: import("./components/Form/Feedback").FeedbackProps) => import("react").ReactElement<any, string | import("react").JSXElementConstructor<any>>;
+    FeedbackContext: import("react").Context<import("./components/Form/Feedback").UseFeedback>;
+    useFeedback: (props: import("./components/Form/Feedback").FeedbackContextInterface) => import("./components/Form/Feedback").UseFeedback;
     Alert: import("react").ForwardRefExoticComponent<import("./components/Component/Alert").AlertProps>;
     AlertChildren: import("react").ForwardRefExoticComponent<import("./components/Component/Alert").AlertChildrenProps>;
     Button: import("react").ForwardRefExoticComponent<import("./components/Component/Button").ButtonProps>;
@@ -33,5 +42,10 @@ declare const returnLibrary: {
     useNotification: (props: import("./components/Component/Notification/Context").NotificationContextProps) => import("./components/Component/Notification/Context").UseNotificationProps;
     Toast: import("react").ForwardRefExoticComponent<import("./components/Component/Toast").ToastProps>;
     ToastContainer: import("react").ForwardRefExoticComponent<import("./components/Component/Toast").ToastContainerProps>;
+    Pagination: import("react").ForwardRefExoticComponent<import("./components/Component/Pagination").PaginationProps>;
+    Modal: import("react").ForwardRefExoticComponent<import("./components/Component/Modal").ModalProps>;
+    ModalHeader: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Header").ModalHeaderProps>;
+    ModalBody: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Body").ModalBodyProps>;
+    ModalFooter: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Footer").ModalFooterProps>;
 };
 export default returnLibrary;

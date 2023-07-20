@@ -17,3 +17,22 @@ export declare function route(__ROUTES__: Record<string, string>, routeName: str
  * @return {*}  {string}
  */
 export declare function createQueries(parameters?: Record<string, string>): string;
+/**
+ * 全クエリ取得
+ *
+ * @export
+ * @param {string} path
+ * @return {*}  {{ [s: string]: string }}
+ */
+export declare function getQueries(path: string): {
+    [s: string]: string;
+};
+/**
+ * クエリ取得
+ *
+ * @export
+ * @param {string} key
+ * @param {(string | undefined)} [path=undefined]
+ * @return {*}  {(string | undefined)}
+ */
+export declare function getQuery(key: string, path?: string | undefined): string | undefined;

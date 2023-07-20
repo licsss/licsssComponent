@@ -21,6 +21,11 @@ import Toast, {
   ToastContainerProps,
   ToastProps,
 } from "./Toast";
+import Pagination, { PaginationProps } from "./Pagination";
+import Modal, { ModalProps } from "./Modal";
+import ModalHeader, { ModalHeaderProps } from "./Modal/Header";
+import ModalBody, { ModalBodyProps } from "./Modal/Body";
+import ModalFooter, { ModalFooterProps } from "./Modal/Footer";
 
 export interface ComponentsInterface {
   Alert: React.ForwardRefExoticComponent<AlertProps>;
@@ -35,6 +40,11 @@ export interface ComponentsInterface {
   useNotification: (props: NotificationContextProps) => UseNotificationProps;
   Toast: React.ForwardRefExoticComponent<ToastProps>;
   ToastContainer: React.ForwardRefExoticComponent<ToastContainerProps>;
+  Pagination: React.ForwardRefExoticComponent<PaginationProps>;
+  Modal: React.ForwardRefExoticComponent<ModalProps>;
+  ModalHeader: React.ForwardRefExoticComponent<ModalHeaderProps>;
+  ModalBody: React.ForwardRefExoticComponent<ModalBodyProps>;
+  ModalFooter: React.ForwardRefExoticComponent<ModalFooterProps>;
 }
 
 const Components: ComponentsInterface = {
@@ -50,5 +60,10 @@ const Components: ComponentsInterface = {
   useNotification: useNotification,
   Toast: Toast,
   ToastContainer: ToastContainer,
+  Pagination: Pagination,
+  Modal: Modal,
+  ModalHeader: ModalHeader,
+  ModalBody: ModalBody,
+  ModalFooter: ModalFooter,
 };
 export default Components;

@@ -39,3 +39,39 @@ export function createQueries(parameters: Record<string, string> = {}): string {
   });
   return query.join("&");
 }
+
+/**
+ * 全クエリ取得
+ *
+ * @export
+ * @param {string} path
+ * @return {*}  {{ [s: string]: string }}
+ */
+export function getQueries(path: string): { [s: string]: string } {
+  let queries: { [s: string]: string } = {};
+  let splited_question = path.split("?");
+  let splited_equal = splited_question[splited_question.length - 1].split("&");
+  splited_equal.forEach((val: string): void => {
+    let splited: string[] = val.split("=");
+    if (splited.length > 1) queries[splited[0]] = splited[1];
+  });
+  return queries;
+}
+
+/**
+ * クエリ取得
+ *
+ * @export
+ * @param {string} key
+ * @param {(string | undefined)} [path=undefined]
+ * @return {*}  {(string | undefined)}
+ */
+export function getQuery(
+  key: string,
+  path: string | undefined = undefined
+): string | undefined {
+  let queries: { [s: string]: string } = getQueries(
+    path === undefined ? window.location.href : path
+  );
+  return queries[key];
+}

@@ -1,10 +1,12 @@
 import React from "react";
-import Bootstrap, { FormControl, FormSelect } from "react-bootstrap";
+import Bootstrap, { FormSelect } from "react-bootstrap";
+import Feedback, { FeedbackContext, useFeedback } from "../Feedback";
 
 export interface FormSelectProps extends Bootstrap.FormSelectProps {
   required?: boolean;
-  validMessage?: React.ReactNode;
-  invalidMessage?: React.ReactNode;
+  validMessage?: React.ReactElement | string;
+  invalidMessage?: React.ReactElement | string;
+  name: string;
   options?: { value: string; label: string }[];
 }
 export default React.forwardRef(
@@ -23,12 +25,24 @@ export default React.forwardRef(
       onChange: onChange,
     };
 
+    const FeedbackValue = useFeedback({
+      name: SelectProp.name,
+      invalidMessages: false,
+    });
     function onChange(e: React.ChangeEvent<HTMLSelectElement>): void {
       if (props.onChange) props.onChange(e);
     }
     return (
-      <>
-        <FormSelect {...SelectProp} ref={ref}>
+      <FeedbackContext.Provider value={FeedbackValue}>
+        <FormSelect
+          {...SelectProp}
+          ref={ref}
+          className={`
+            ${SelectProp.className || ""}${
+              FeedbackValue.invalidMessages !== false ? " border-danger" : ""
+            }
+          `}
+        >
           <option
             label="選択してください"
             className={SelectProp.required ? "d-none" : ""}
@@ -36,11 +50,12 @@ export default React.forwardRef(
           {options?.map((option) => <option key={option.value} {...option} />)}
           {children}
         </FormSelect>
-        <FormControl.Feedback>{validMessage}</FormControl.Feedback>
-        <FormControl.Feedback type="invalid">
-          {invalidMessage}
-        </FormControl.Feedback>
-      </>
+        <Feedback
+          name={SelectProp.name}
+          validMessage={validMessage}
+          invalidMessage={invalidMessage}
+        />
+      </FeedbackContext.Provider>
     );
   }
 );

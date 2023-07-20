@@ -13,11 +13,13 @@ export type ResponseStatusType = {
     nonce: string;
     code: number;
 };
-export type ResponseErrorType = {
+export type ResponseErrorType<T = string[] | {
+    [key: string]: string[];
+}> = {
     abstract: string;
     title: string;
     code: number;
-    messages: string[];
+    messages: T;
 };
 export type ResponseMetaType = {
     currentPage: number;
@@ -30,10 +32,12 @@ export type ResponseIndexType<T = object> = {
     meta: ResponseMetaType;
     items: T[];
 };
-export type ResponseType<T = object> = {
+export type ResponseType<T = object, S = string[] | {
+    [key: string]: string[];
+}> = {
     status: ResponseStatusType;
     payloads?: T;
-    error?: ResponseErrorType;
+    error?: ResponseErrorType<S>;
 };
 /**
  * API通信

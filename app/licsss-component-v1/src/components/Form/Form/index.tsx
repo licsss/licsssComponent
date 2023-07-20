@@ -39,7 +39,10 @@ export default React.forwardRef(
       }
       setValidated(false);
       if (onSubmit) await onSubmit(e);
-      if (Response) FormContextValue.setResponse(Response);
+      if (Response) {
+        FormContextValue.setResponse(Response);
+        if (!Response.status.result) setValidated(true);
+      }
     }
     return (
       <FormContext.Provider value={FormContextValue}>
@@ -82,15 +85,17 @@ export const FormNotification = React.forwardRef(
           {`[${props.Response.Response.error?.abstract}]${props.Response.Response.error?.title}`}
         </>
       );
-      AlertProp["children"] = (
-        <ul>
-          {props.Response.Response.error?.messages.map(
-            (message: string): React.ReactElement => (
-              <li key={message}>{message}</li>
-            )
-          )}
-        </ul>
-      );
+      if (Array.isArray(props.Response.Response.error?.messages)) {
+        AlertProp["children"] = (
+          <ul>
+            {props.Response.Response.error?.messages.map(
+              (message: string): React.ReactElement => (
+                <li key={message}>{message}</li>
+              )
+            )}
+          </ul>
+        );
+      }
     }
     return <Alert {...AlertProp} ref={ref} />;
   }

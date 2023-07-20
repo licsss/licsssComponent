@@ -6,6 +6,7 @@ import { FormControlWrapperProps } from "./ControlWrapper";
 import { FormElementWrapperProps } from "./ElementWrapper";
 import { FormSelectProps } from "./Select";
 import { FormSelectWrapperProps } from "./SelectWrapper";
+import { FeedbackContextInterface, FeedbackProps, UseFeedback } from "./Feedback";
 export interface FormsInterface {
     Form: React.ForwardRefExoticComponent<FormProps & React.RefAttributes<HTMLFormElement>>;
     FormNotification: React.ForwardRefExoticComponent<FormNotificationProps>;
@@ -16,6 +17,9 @@ export interface FormsInterface {
     ElementWrapper: React.ForwardRefExoticComponent<FormElementWrapperProps>;
     Select: React.ForwardRefExoticComponent<FormSelectProps>;
     SelectWrapper: React.ForwardRefExoticComponent<FormSelectWrapperProps>;
+    Feedback: (props: FeedbackProps) => React.ReactElement;
+    FeedbackContext: React.Context<UseFeedback>;
+    useFeedback: (props: FeedbackContextInterface) => UseFeedback;
 }
 declare const Forms: FormsInterface;
 export default Forms;

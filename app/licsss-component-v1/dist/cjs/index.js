@@ -51,7 +51,7 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
 var Icon = React.forwardRef((props, ref) => {
     let _a = Object.assign({}, props), { name } = _a, Props = __rest(_a, ["name"]);
     if (name === "normal" || !name)
-        return props.children;
+        return jsxRuntime.jsx(jsxRuntime.Fragment, { children: props.children });
     if (svgs[name])
         Props = Object.assign(Object.assign({}, props), svgs[name]);
     if (!Props["width"])
@@ -115,7 +115,7 @@ var Alert = React.forwardRef((_a, ref) => {
 const AlertChildren = React.forwardRef((_a, ref) => {
     var { width = 32, heigth = 32 } = _a, props = __rest(_a, ["width", "heigth"]);
     if (!props.name || props.name === "normal")
-        return jsxRuntime.jsx("div", { ref: ref });
+        return jsxRuntime.jsx("div", Object.assign({ ref: ref }, { children: props.children }));
     return (jsxRuntime.jsx("table", Object.assign({ ref: ref, className: "w-100" }, { children: jsxRuntime.jsxs("tr", { children: [jsxRuntime.jsx("td", Object.assign({ className: "w-0 align-middle p-0 pe-3" }, { children: jsxRuntime.jsx(Icon, { name: props.name, width: width, height: heigth, className: "mt-auto align-middle" }) })), jsxRuntime.jsx("td", { children: props.children })] }) })));
 });
 
@@ -330,6 +330,36 @@ function createQueries(parameters = {}) {
     });
     return query.join("&");
 }
+/**
+ * 全クエリ取得
+ *
+ * @export
+ * @param {string} path
+ * @return {*}  {{ [s: string]: string }}
+ */
+function getQueries(path) {
+    let queries = {};
+    let splited_question = path.split("?");
+    let splited_equal = splited_question[splited_question.length - 1].split("&");
+    splited_equal.forEach((val) => {
+        let splited = val.split("=");
+        if (splited.length > 1)
+            queries[splited[0]] = splited[1];
+    });
+    return queries;
+}
+/**
+ * クエリ取得
+ *
+ * @export
+ * @param {string} key
+ * @param {(string | undefined)} [path=undefined]
+ * @return {*}  {(string | undefined)}
+ */
+function getQuery(key, path = undefined) {
+    let queries = getQueries(path === undefined ? window.location.href : path);
+    return queries[key];
+}
 
 var Functions = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -340,6 +370,8 @@ var Functions = /*#__PURE__*/Object.freeze({
     createKey: createKey,
     createQueries: createQueries,
     date_format: date_format,
+    getQueries: getQueries,
+    getQuery: getQuery,
     isString: isString,
     number_format: number_format,
     route: route,
@@ -400,6 +432,40 @@ const NotificationToast = React.forwardRef((_a, ref) => {
     return jsxRuntime.jsx(Toast, Object.assign({ show: Show }, ToastProps, { onClose: close, ref: ref }));
 });
 
+var Pagination = React.forwardRef((_a, ref) => {
+    var { meta, setPage, className } = _a, props = __rest(_a, ["meta", "setPage", "className"]);
+    const [TopPage, setTopPage] = React.useState(true);
+    const [LastPage, setLastPage] = React.useState(true);
+    React.useEffect(() => {
+        setTopPage(meta.currentPage === 1);
+        setLastPage(meta.currentPage === meta.lastPage);
+    }, [meta]);
+    function changePage(e) {
+        e.preventDefault();
+        setPage(Number(getQuery("page", e.currentTarget.pathname)));
+    }
+    return (jsxRuntime.jsx("div", Object.assign({ className: "w-100", ref: ref }, { children: jsxRuntime.jsxs(reactBootstrap.Pagination, Object.assign({ className: "mx-auto mt-3 position-static " + className }, props, { children: [jsxRuntime.jsx(reactBootstrap.Pagination.First, { href: "?page=1", onClick: changePage, disabled: TopPage }), jsxRuntime.jsx(reactBootstrap.Pagination.Prev, { href: TopPage ? `?page=1` : `?page=${meta.currentPage - 1}`, onClick: changePage, disabled: TopPage }), jsxRuntime.jsx(reactBootstrap.Pagination.Item, Object.assign({ disabled: true }, { children: meta.currentPage })), jsxRuntime.jsx(reactBootstrap.Pagination.Next, { href: `?page=${meta.currentPage + 1}`, onClick: changePage, disabled: LastPage }), jsxRuntime.jsx(reactBootstrap.Pagination.Last, { href: LastPage ? `?page=${meta.lastPage}` : `?page=${meta.lastPage}`, onClick: changePage, disabled: LastPage })] })) })));
+});
+
+var ModalHeader = React.forwardRef((_a, ref) => {
+    var { closeButton = true } = _a, props = __rest(_a, ["closeButton"]);
+    return jsxRuntime.jsx(reactBootstrap.ModalHeader, Object.assign({ closeButton: closeButton }, props, { ref: ref }));
+});
+
+var ModalFooter = React.forwardRef((props, ref) => {
+    return jsxRuntime.jsx(reactBootstrap.ModalFooter, Object.assign({}, props, { ref: ref }));
+});
+
+var ModalBody = React.forwardRef((_a, ref) => {
+    var props = __rest(_a, []);
+    return jsxRuntime.jsx(reactBootstrap.ModalBody, Object.assign({}, props, { ref: ref }));
+});
+
+const _default = React.forwardRef((_a, ref) => {
+    var { animation = true, scrollable = true, centered = true, Header, Body, Footer, children } = _a, props = __rest(_a, ["animation", "scrollable", "centered", "Header", "Body", "Footer", "children"]);
+    return (jsxRuntime.jsxs(reactBootstrap.Modal, Object.assign({ animation: animation, scrollable: scrollable, centered: centered }, props, { ref: ref }, { children: [Header !== undefined && jsxRuntime.jsx(ModalHeader, Object.assign({}, Header)), jsxRuntime.jsx(ModalBody, { children: children }), Body !== undefined && jsxRuntime.jsx(ModalBody, Object.assign({}, Body)), Footer !== undefined && jsxRuntime.jsx(ModalFooter, Object.assign({}, Footer))] })));
+});
+
 const Components = {
     Alert: Alert,
     AlertChildren: AlertChildren,
@@ -413,20 +479,12 @@ const Components = {
     useNotification: useNotification,
     Toast: Toast,
     ToastContainer: ToastContainer,
+    Pagination: Pagination,
+    Modal: _default,
+    ModalHeader: ModalHeader,
+    ModalBody: ModalBody,
+    ModalFooter: ModalFooter,
 };
-
-var Control = React.forwardRef((props, ref) => {
-    const _a = Object.assign(Object.assign({}, props), { onChange: onChange }), { validMessage, invalidMessage } = _a, Prop = __rest(_a, ["validMessage", "invalidMessage"]);
-    if (!Prop.maxLength)
-        Prop.maxLength = undefined;
-    const [Cnt, setCnt] = React.useState(String(props.value ? props.value : props.defaultValue ? props.defaultValue : "").length);
-    function onChange(e) {
-        setCnt(String(e.currentTarget.value).length);
-        if (props.onChange)
-            props.onChange(e);
-    }
-    return (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [jsxRuntime.jsx(reactBootstrap.FormControl, Object.assign({}, Prop, { ref: ref })), jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, { children: validMessage }), jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, Object.assign({ type: "invalid" }, { children: invalidMessage })), jsxRuntime.jsx("div", Object.assign({ className: "form-control-info " + (Prop.maxLength ? "" : "d-none") }, { children: `${Cnt}/${Prop.maxLength}文字` }))] }));
-});
 
 var FormContext = React.createContext({
     Response: undefined,
@@ -442,6 +500,64 @@ function useForm() {
         setResponse: setResponse,
     };
 }
+
+function Feedback(props) {
+    const FormContext$1 = React.useContext(FormContext);
+    const invalidMessages = React.useContext(FeedbackContext);
+    React.useEffect(() => {
+        if (!invalidMessages.changeResponse)
+            return;
+        invalidMessages.changeResponse(FormContext$1.Response);
+    }, [FormContext$1.Response, invalidMessages]);
+    return (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [props.children, props.validMessage && (jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, { children: props.validMessage })), invalidMessages.invalidMessages !== false && (jsxRuntime.jsx("div", Object.assign({ className: "text-danger" }, { children: jsxRuntime.jsx("ul", { children: invalidMessages.invalidMessages.map((message) => (jsxRuntime.jsx("li", { children: message }, `${props.name}-${message}`))) }) }))), props.invalidMessage && (jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, Object.assign({ type: "invalid" }, { children: props.invalidMessage })))] }));
+}
+const FeedbackContext = React.createContext({
+    name: "",
+    invalidMessages: false,
+    changeInvalidMessages: (p) => "",
+    changeResponse: (p) => "",
+});
+function useFeedback(props) {
+    const [invalidMessages, setInvalidMessages] = React.useState(props.invalidMessages);
+    function changeInvalidMessages(invalidMessages) {
+        setInvalidMessages(invalidMessages === false ? false : [...invalidMessages]);
+    }
+    function changeResponse(response) {
+        var _a, _b;
+        let invalidMessages = false;
+        if (response !== undefined &&
+            !response.status.result &&
+            ((_a = response.error) === null || _a === void 0 ? void 0 : _a.messages[props.name]) &&
+            Array.isArray((_b = response.error) === null || _b === void 0 ? void 0 : _b.messages[props.name]))
+            invalidMessages = response.error.messages[props.name];
+        changeInvalidMessages(invalidMessages);
+    }
+    return {
+        name: props.name,
+        invalidMessages: invalidMessages,
+        changeInvalidMessages: changeInvalidMessages,
+        changeResponse: changeResponse,
+    };
+}
+
+var Control = React.forwardRef((props, ref) => {
+    const _a = Object.assign(Object.assign({}, props), { onChange: onChange }), { validMessage, invalidMessage } = _a, Prop = __rest(_a, ["validMessage", "invalidMessage"]);
+    if (!Prop.maxLength)
+        Prop.maxLength = undefined;
+    const [Cnt, setCnt] = React.useState(String(props.value ? props.value : props.defaultValue ? props.defaultValue : "").length);
+    const FeedbackValue = useFeedback({
+        name: Prop.name,
+        invalidMessages: false,
+    });
+    function onChange(e) {
+        setCnt(String(e.currentTarget.value).length);
+        if (props.onChange)
+            props.onChange(e);
+    }
+    return (jsxRuntime.jsxs(FeedbackContext.Provider, Object.assign({ value: FeedbackValue }, { children: [jsxRuntime.jsx(reactBootstrap.FormControl, Object.assign({}, Prop, { ref: ref, className: `
+            ${Prop.className || ""}${FeedbackValue.invalidMessages !== false ? " border-danger" : ""}
+          ` })), jsxRuntime.jsx(Feedback, { validMessage: validMessage, invalidMessage: invalidMessage, name: Prop.name }), jsxRuntime.jsx("div", Object.assign({ className: "form-control-info " + (Prop.maxLength ? "" : "d-none") }, { children: `${Cnt}/${Prop.maxLength}文字` }))] })));
+});
 
 var Form = React.forwardRef((_a, ref) => {
     var { validated = false, noValidate = true, onSubmit = undefined, successMessage = false, Response = undefined } = _a, props = __rest(_a, ["validated", "noValidate", "onSubmit", "successMessage", "Response"]);
@@ -461,14 +577,17 @@ var Form = React.forwardRef((_a, ref) => {
             setValidated(false);
             if (onSubmit)
                 yield onSubmit(e);
-            if (Response)
+            if (Response) {
                 FormContextValue.setResponse(Response);
+                if (!Response.status.result)
+                    setValidated(true);
+            }
         });
     }
     return (jsxRuntime.jsxs(FormContext.Provider, Object.assign({ value: FormContextValue }, { children: [jsxRuntime.jsx(FormNotification, { Response: FormContextValue, successMessage: successMessage }), jsxRuntime.jsx(reactBootstrap.Form, Object.assign({}, props, { ref: ref, validated: Validated, noValidate: noValidate, onSubmit: doSubmit }))] })));
 });
 const FormNotification = React.forwardRef((props, ref) => {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     if (!props.Response.Response || props.successMessage === false)
         return jsxRuntime.jsx(jsxRuntime.Fragment, {});
     let AlertProp = {};
@@ -480,7 +599,9 @@ const FormNotification = React.forwardRef((props, ref) => {
     else {
         AlertProp["name"] = "exclamation";
         AlertProp["Heading"] = (jsxRuntime.jsx(jsxRuntime.Fragment, { children: `[${(_a = props.Response.Response.error) === null || _a === void 0 ? void 0 : _a.abstract}]${(_b = props.Response.Response.error) === null || _b === void 0 ? void 0 : _b.title}` }));
-        AlertProp["children"] = (jsxRuntime.jsx("ul", { children: (_c = props.Response.Response.error) === null || _c === void 0 ? void 0 : _c.messages.map((message) => (jsxRuntime.jsx("li", { children: message }, message))) }));
+        if (Array.isArray((_c = props.Response.Response.error) === null || _c === void 0 ? void 0 : _c.messages)) {
+            AlertProp["children"] = (jsxRuntime.jsx("ul", { children: (_d = props.Response.Response.error) === null || _d === void 0 ? void 0 : _d.messages.map((message) => (jsxRuntime.jsx("li", { children: message }, message))) }));
+        }
     }
     return jsxRuntime.jsx(Alert, Object.assign({}, AlertProp, { ref: ref }));
 });
@@ -499,11 +620,17 @@ var ControlWrapper = React.forwardRef((props, ref) => {
 
 var Select = React.forwardRef((props, ref) => {
     const _a = Object.assign(Object.assign({}, props), { onChange: onChange }), { validMessage, invalidMessage, children, options } = _a, SelectProp = __rest(_a, ["validMessage", "invalidMessage", "children", "options"]);
+    const FeedbackValue = useFeedback({
+        name: SelectProp.name,
+        invalidMessages: false,
+    });
     function onChange(e) {
         if (props.onChange)
             props.onChange(e);
     }
-    return (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [jsxRuntime.jsxs(reactBootstrap.FormSelect, Object.assign({}, SelectProp, { ref: ref }, { children: [jsxRuntime.jsx("option", { label: "\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044", className: SelectProp.required ? "d-none" : "" }), options === null || options === void 0 ? void 0 : options.map((option) => jsxRuntime.jsx("option", Object.assign({}, option), option.value)), children] })), jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, { children: validMessage }), jsxRuntime.jsx(reactBootstrap.FormControl.Feedback, Object.assign({ type: "invalid" }, { children: invalidMessage }))] }));
+    return (jsxRuntime.jsxs(FeedbackContext.Provider, Object.assign({ value: FeedbackValue }, { children: [jsxRuntime.jsxs(reactBootstrap.FormSelect, Object.assign({}, SelectProp, { ref: ref, className: `
+            ${SelectProp.className || ""}${FeedbackValue.invalidMessages !== false ? " border-danger" : ""}
+          ` }, { children: [jsxRuntime.jsx("option", { label: "\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044", className: SelectProp.required ? "d-none" : "" }), options === null || options === void 0 ? void 0 : options.map((option) => jsxRuntime.jsx("option", Object.assign({}, option), option.value)), children] })), jsxRuntime.jsx(Feedback, { name: SelectProp.name, validMessage: validMessage, invalidMessage: invalidMessage })] })));
 });
 
 var SelectWrapper = React.forwardRef((props, ref) => {
@@ -521,6 +648,9 @@ const Forms = {
     ElementWrapper: ElementWrapper,
     Select: Select,
     SelectWrapper: SelectWrapper,
+    Feedback: Feedback,
+    FeedbackContext: FeedbackContext,
+    useFeedback: useFeedback,
 };
 
 const Component = Object.assign(Object.assign({}, Forms), Components);

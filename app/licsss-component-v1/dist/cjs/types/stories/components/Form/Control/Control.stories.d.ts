@@ -1,8 +1,9 @@
 /// <reference types="react" />
 import type { StoryObj } from "@storybook/react";
+import { FormControlProps } from "../../../../components/Form/Control";
 declare const meta: {
     title: string;
-    component: import("react").ForwardRefExoticComponent<import("../../../../components/Form/Control").FormControlProps & import("react").RefAttributes<HTMLInputElement | HTMLTextAreaElement>>;
+    component: import("react").ForwardRefExoticComponent<FormControlProps & import("react").RefAttributes<HTMLInputElement | HTMLTextAreaElement>>;
     tags: string[];
 };
 export default meta;

@@ -18,11 +18,11 @@ export type ResponseStatusType = {
   code: number;
 };
 //エラーレスポンス
-export type ResponseErrorType = {
+export type ResponseErrorType<T = string[] | { [key: string]: string[] }> = {
   abstract: string;
   title: string;
   code: number;
-  messages: string[];
+  messages: T;
 };
 //ページネーションメタ
 export type ResponseMetaType = {
@@ -37,10 +37,13 @@ export type ResponseIndexType<T = object> = {
   items: T[];
 };
 // レスポンス
-export type ResponseType<T = object> = {
+export type ResponseType<
+  T = object,
+  S = string[] | { [key: string]: string[] },
+> = {
   status: ResponseStatusType;
   payloads?: T;
-  error?: ResponseErrorType;
+  error?: ResponseErrorType<S>;
 };
 
 /**

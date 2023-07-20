@@ -3,6 +3,57 @@ import * as React from 'react';
 import React__default, { HTMLAttributes } from 'react';
 import Bootstrap from 'react-bootstrap';
 
+interface ModalFooterProps extends React__default.PropsWithChildren {
+    className?: string;
+}
+
+interface ModalBodyProps extends React__default.PropsWithChildren {
+    className?: string;
+}
+
+interface ModalHeaderProps extends Bootstrap.ModalHeaderProps {
+}
+
+interface ModalProps extends Bootstrap.ModalProps {
+    Header?: ModalHeaderProps;
+    children?: React__default.ReactNode;
+    Body?: ModalBodyProps;
+    Footer?: ModalFooterProps;
+}
+
+type ResponseStatusType = {
+    result: boolean;
+    nonce: string;
+    code: number;
+};
+type ResponseErrorType<T = string[] | {
+    [key: string]: string[];
+}> = {
+    abstract: string;
+    title: string;
+    code: number;
+    messages: T;
+};
+type ResponseMetaType = {
+    currentPage: number;
+    lastPage: number;
+    length: number;
+    getLength: number;
+    per: number;
+};
+type ResponseType<T = object, S = string[] | {
+    [key: string]: string[];
+}> = {
+    status: ResponseStatusType;
+    payloads?: T;
+    error?: ResponseErrorType<S>;
+};
+
+interface PaginationProps extends Bootstrap.PaginationProps {
+    meta: ResponseMetaType;
+    setPage: React__default.Dispatch<React__default.SetStateAction<number>>;
+}
+
 interface ToastProps extends Bootstrap.ToastProps {
     header?: React__default.ReactNode;
 }
@@ -64,6 +115,22 @@ interface AlertChildrenProps extends React__default.PropsWithChildren {
     heigth?: number;
 }
 
+interface FeedbackProps extends React__default.PropsWithChildren {
+    validMessage?: React__default.ReactElement | string;
+    invalidMessage?: React__default.ReactElement | string;
+    name?: string;
+}
+interface FeedbackContextInterface {
+    name: string;
+    invalidMessages: string[] | false;
+}
+interface UseFeedback extends FeedbackContextInterface {
+    changeInvalidMessages: (props: string[] | false) => void;
+    changeResponse: (props: ResponseType<object, {
+        [key: string]: string[];
+    }> | undefined) => void;
+}
+
 interface FormElementWrapperProps extends React__default.PropsWithChildren {
     label: string;
     description?: string;
@@ -73,8 +140,9 @@ interface FormElementWrapperProps extends React__default.PropsWithChildren {
 
 interface FormSelectProps extends Bootstrap.FormSelectProps {
     required?: boolean;
-    validMessage?: React__default.ReactNode;
-    invalidMessage?: React__default.ReactNode;
+    validMessage?: React__default.ReactElement | string;
+    invalidMessage?: React__default.ReactElement | string;
+    name: string;
     options?: {
         value: string;
         label: string;
@@ -86,28 +154,12 @@ type FormSelectWrapperProps = FormElementWrapperProps & FormSelectProps & {};
 interface FormControlProps extends Bootstrap.FormControlProps {
     maxLength?: number;
     required?: boolean;
-    validMessage?: React__default.ReactNode;
-    invalidMessage?: React__default.ReactNode;
+    validMessage?: React__default.ReactElement | string;
+    invalidMessage?: React__default.ReactElement | string;
+    name: string;
 }
 
 type FormControlWrapperProps = FormElementWrapperProps & FormControlProps & {};
-
-type ResponseStatusType = {
-    result: boolean;
-    nonce: string;
-    code: number;
-};
-type ResponseErrorType = {
-    abstract: string;
-    title: string;
-    code: number;
-    messages: string[];
-};
-type ResponseType<T = object> = {
-    status: ResponseStatusType;
-    payloads?: T;
-    error?: ResponseErrorType;
-};
 
 interface FormContextProps<T = ResponseType> {
     Response?: T;
@@ -132,6 +184,10 @@ declare const returnLibrary: {
     checkNonce(expectedNonce: string, receivedNonce: string | undefined): boolean;
     route(__ROUTES__: Record<string, string>, routeName: string, parameters?: Record<string, string>, containDomain?: boolean): string;
     createQueries(parameters?: Record<string, string>): string;
+    getQueries(path: string): {
+        [s: string]: string;
+    };
+    getQuery(key: string, path?: string | undefined): string | undefined;
     cookies(): Record<string, string>;
     cookie(key?: string | undefined): string | Record<string, string> | undefined;
     createKey(): string;
@@ -141,13 +197,18 @@ declare const returnLibrary: {
     sortJSON<T = object>(json: T): T;
     Form: React.ForwardRefExoticComponent<FormProps & React.RefAttributes<HTMLFormElement>>;
     FormNotification: React.ForwardRefExoticComponent<FormNotificationProps>;
-    FormContext: React.Context<FormContextProps<ResponseType<object>>>;
+    FormContext: React.Context<FormContextProps<ResponseType<object, string[] | {
+        [key: string]: string[];
+    }>>>;
     useForm: <T_1>() => UseFormProps<T_1>;
     Control: React.ForwardRefExoticComponent<FormControlProps & React.RefAttributes<HTMLInputElement | HTMLTextAreaElement>>;
     ControlWrapper: React.ForwardRefExoticComponent<FormControlWrapperProps>;
     ElementWrapper: React.ForwardRefExoticComponent<FormElementWrapperProps>;
     Select: React.ForwardRefExoticComponent<FormSelectProps>;
     SelectWrapper: React.ForwardRefExoticComponent<FormSelectWrapperProps>;
+    Feedback: (props: FeedbackProps) => React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+    FeedbackContext: React.Context<UseFeedback>;
+    useFeedback: (props: FeedbackContextInterface) => UseFeedback;
     Alert: React.ForwardRefExoticComponent<AlertProps>;
     AlertChildren: React.ForwardRefExoticComponent<AlertChildrenProps>;
     Button: React.ForwardRefExoticComponent<ButtonProps>;
@@ -160,6 +221,11 @@ declare const returnLibrary: {
     useNotification: (props: NotificationContextProps) => UseNotificationProps;
     Toast: React.ForwardRefExoticComponent<ToastProps>;
     ToastContainer: React.ForwardRefExoticComponent<ToastContainerProps>;
+    Pagination: React.ForwardRefExoticComponent<PaginationProps>;
+    Modal: React.ForwardRefExoticComponent<ModalProps>;
+    ModalHeader: React.ForwardRefExoticComponent<ModalHeaderProps>;
+    ModalBody: React.ForwardRefExoticComponent<ModalBodyProps>;
+    ModalFooter: React.ForwardRefExoticComponent<ModalFooterProps>;
 };
 
 export { returnLibrary as default };
