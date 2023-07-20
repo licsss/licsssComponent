@@ -70,8 +70,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with: 
-          name: dist
-          path: dist.zip
+          name: "licsssComponent-${{ steps.release_tag.outputs.release_tag }}"
+          path: ./app/licsss-component-v1/dist.zip
           
       - name: Upload Release Asset
         id: upload-release-asset-linux
@@ -85,6 +85,7 @@ jobs:
           asset_content_type: application/zip
           
       - name: publish
+        continue-on-error: true
         if: ${{ always() }}
         run: npm publish
         
