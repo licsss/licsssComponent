@@ -1,3 +1,6 @@
+import { isString } from "../common";
+import { getEndpoint } from "../models";
+
 /**
  * URL取得
  *
@@ -74,4 +77,67 @@ export function getQuery(
     path === undefined ? window.location.href : path
   );
   return queries[key];
+}
+
+export interface RouteConfigInterface {
+  [s: string]: object | {};
+}
+export class View<ParametersInterface = { [s: string]: string }> {
+  protected routes: RouteConfigInterface = {
+    school: {
+      index: "/school/:school",
+    },
+  };
+
+  getRoute(
+    routeName: string,
+    parameters: ParametersInterface | any = {}
+  ): string {
+    return getEndpoint(this.convertURI(routeName), parameters);
+  }
+
+  convertURI(routeName: string): string {
+    const splited: string[] = routeName.split(".");
+    let route: string = "";
+    let routes = { ...this.routes };
+    for (let i = 0; i < splited.length; ++i) {
+      if (!routes[splited[i]]) throw new Error("存在しないルートです");
+      if (!isString(routes[splited[i]])) {
+        routes = { ...routes[splited[i]] };
+      } else {
+        route = routes[splited[i]] as string;
+      }
+    }
+    return `/${route.replace(/\/*/, "")}`.replace(/\/$/, "");
+  }
+
+  /**
+   * httpから取得
+   *
+   * @param {string} routeName
+   * @param {(ParametersInterface | any)} [parameters={}]
+   * @return {*}
+   * @memberof View
+   */
+  getFullUrl(
+    routeName: string,
+    parameters: ParametersInterface | any = {}
+  ): string {
+    return `${window.location.protocol}//${
+      window.location.hostname
+    }${this.getRoute(routeName, parameters)}`;
+  }
+  /**
+   * 2つ目の/以降取得
+   *
+   * @param {string} routeName
+   * @param {(ParametersInterface | any)} [parameters={}]
+   * @memberof View
+   */
+  getUnderPath(
+    routeName: string,
+    parameters: ParametersInterface | any = {}
+  ): string {
+    return `/${this.getRoute(routeName, parameters).replace(/\/[\S]*\//, "")}`;
+  }
 }
