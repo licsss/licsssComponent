@@ -7,7 +7,7 @@ import {
   addLocal,
   removeLocal,
 } from "../../../../components/Wrapper/Redux/reducer";
-import { sortJSON } from "../../../../functions";
+import { createKey, sortJSON } from "../../../../functions";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
@@ -45,6 +45,13 @@ function ReduxChildren() {
         onClick={() => dispath(removeLocal({ key: "key", value: "value" }))}
       >
         remove
+      </button>
+      <button
+        onClick={() =>
+          dispath(addLocal({ key: createKey(), value: "you tapped" }))
+        }
+      >
+        random
       </button>
       <div>
         保持データ
