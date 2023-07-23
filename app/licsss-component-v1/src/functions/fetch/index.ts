@@ -5,10 +5,11 @@ export type ApiBaseType = {
   base_url?: string;
   endpoint: string;
   headers?: object;
-  nonceKey: string;
+  nonceKey?: string;
 };
+export type MethodType = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export type ApiType = ApiBaseType & {
-  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  method?: MethodType;
   body?: BodyInit;
 };
 // レスポンスステータス
@@ -66,7 +67,7 @@ export default async function send<R = ResponseType>({
   method = "GET",
   body = undefined,
   headers = undefined,
-  nonceKey = "",
+  nonceKey = "X-LiCSSs-Nonce",
 }: ApiType): Promise<R | string> {
   //NONCE
   const nonce: string = createKey();
