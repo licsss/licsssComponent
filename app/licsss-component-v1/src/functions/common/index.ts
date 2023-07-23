@@ -118,3 +118,31 @@ export function sortJSON<T = object>(json: T): T {
     )
   ) as T | any;
 }
+
+/**
+ * ストレージ保存
+ *
+ * @export
+ * @param {string} key
+ * @param {*} value
+ */
+export function saveStorage(key: string, value: any): void {
+  window.localStorage.setItem(`licsss-storage-${key}`, JSON.stringify(value));
+}
+/**
+ * ストレージ取得
+ *
+ * @export
+ * @param {string} key
+ * @return {*}  {(any | object)}
+ */
+export function getStorage(key: string): any | object {
+  console.log(window.localStorage.getItem(`licsss-storage-${key}`));
+  try {
+    return JSON.parse(
+      window.localStorage.getItem(`licsss-storage-${key}`) || "{}"
+    );
+  } catch {
+    return {};
+  }
+}

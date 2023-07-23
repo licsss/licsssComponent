@@ -1,6 +1,8 @@
 import { jsx, Fragment, jsxs } from 'react/jsx-runtime';
 import React from 'react';
 import { Alert as Alert$1, Button as Button$1, Row, Col, Toast as Toast$1, ToastContainer as ToastContainer$1, Pagination as Pagination$1, ModalHeader as ModalHeader$1, ModalFooter as ModalFooter$1, ModalBody as ModalBody$1, Modal, FormControl, Form as Form$1, FormSelect } from 'react-bootstrap';
+import { Provider, useSelector } from 'react-redux';
+import { createSlice, configureStore } from '@reduxjs/toolkit';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -105,8 +107,9 @@ var Alert = React.forwardRef((_a, ref) => {
                 return "warning";
             case "exclamation":
                 return "danger";
+            default:
+                return "primary";
         }
-        return "primary";
     }
     return (jsx(Alert$1, Object.assign({ ref: ref, variant: getVariant() }, props, { className: `position-static px-2 py-3 ${className}` }, { children: jsxs(AlertChildren, Object.assign({ name: name, width: width, heigth: heigth }, { children: [Heading && (jsxs(Fragment, { children: [jsx(Alert$1.Heading, { children: Heading }), jsx("hr", {})] })), children] })) })));
 });
@@ -258,7 +261,75 @@ function number_format(number) {
 function sortJSON(json) {
     return Object.fromEntries(Object.entries(json).sort((a, b) => a[0].charCodeAt(0) - b[0].charCodeAt(0)));
 }
+/**
+ * ストレージ保存
+ *
+ * @export
+ * @param {string} key
+ * @param {*} value
+ */
+function saveStorage(key, value) {
+    window.localStorage.setItem(`licsss-storage-${key}`, JSON.stringify(value));
+}
+/**
+ * ストレージ取得
+ *
+ * @export
+ * @param {string} key
+ * @return {*}  {(any | object)}
+ */
+function getStorage(key) {
+    console.log(window.localStorage.getItem(`licsss-storage-${key}`));
+    try {
+        return JSON.parse(window.localStorage.getItem(`licsss-storage-${key}`) || "{}");
+    }
+    catch (_a) {
+        return {};
+    }
+}
 
+/**
+ * API通信
+ *
+ * @export
+ * @template R
+ * @param {ApiType} {
+ *   base_url = undefined,
+ *   endpoint = "",
+ *   method = "GET",
+ *   body = undefined,
+ *   headers = undefined,
+ * }
+ * @return {*}  {(Promise<R | false>)}
+ */
+function send({ base_url = undefined, endpoint = "", method = "GET", body = undefined, headers = undefined, nonceKey = "X-LiCSSs-Nonce", }) {
+    return __awaiter(this, void 0, void 0, function* () {
+        //NONCE
+        const nonce = createKey();
+        //URL生成
+        let url = "/";
+        if (base_url !== undefined) {
+            url = base_url;
+        }
+        url += endpoint;
+        //送信オプション作成
+        let opt = {
+            method: method,
+            credentials: "include",
+        };
+        if (body !== undefined)
+            opt["body"] = body;
+        //ヘッダ作成
+        let customHeaders = Object.assign({}, (headers || {}));
+        customHeaders[nonceKey] = nonce;
+        opt["headers"] = createHeader(customHeaders);
+        const res = yield fetch(url, opt)
+            .then((response) => response.json())
+            .then((res) => res)
+            .catch((error) => error);
+        return res;
+    });
+}
 /**
  * 送信ヘッダ作成
  *
@@ -290,6 +361,167 @@ function createHeader(headers = undefined) {
  */
 function checkNonce(expectedNonce, receivedNonce) {
     return expectedNonce === receivedNonce;
+}
+
+class Model {
+    constructor() {
+        this.baseUri = "";
+        this.routeSend = {
+            index: {
+                routeName: "index",
+                method: "GET",
+            },
+            store: {
+                routeName: "store",
+                method: "POST",
+            },
+            show: {
+                routeName: "show",
+                method: "GET",
+            },
+            update: {
+                routeName: "",
+                method: "PUT",
+            },
+            destroy: {
+                routeName: "",
+                method: "DELETE",
+            },
+        };
+    }
+    getRoute(endpoint, parameters = {}) {
+        return getEndpoint(this.convertURI(endpoint), parameters || {});
+    }
+    convertURI(endpoint) {
+        return `${this.baseUri}/${endpoint.replace(/\/*/, "")}`.replace(/\/$/, "");
+    }
+    send({ endpoint, parameters = {}, body = {}, method = "GET", }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield send({
+                endpoint: this.getRoute(endpoint, parameters),
+                body: JSON.stringify(body),
+                method: method,
+            });
+        });
+    }
+    index(parameters) {
+        return this.send({
+            endpoint: this.routeSend["index"].routeName,
+            parameters: parameters,
+            method: this.routeSend["index"].method,
+        });
+    }
+    show(parameters) {
+        return this.send({
+            endpoint: this.routeSend["show"].routeName,
+            parameters: parameters,
+            method: this.routeSend["show"].method,
+        });
+    }
+    store(parameters) {
+        return this.send({
+            endpoint: this.routeSend["store"].routeName,
+            parameters: parameters,
+            method: this.routeSend["store"].method,
+        });
+    }
+    update(parameters) {
+        return this.send({
+            endpoint: this.routeSend["update"].routeName,
+            parameters: parameters,
+            method: this.routeSend["update"].method,
+        });
+    }
+    destroy(parameters) {
+        return this.send({
+            endpoint: this.routeSend["destroy"].routeName,
+            parameters: parameters,
+            method: this.routeSend["destroy"].method,
+        });
+    }
+}
+/**
+ * パラメータ編集
+ *
+ * @export
+ * @param {string} base_uri
+ * @param {{}} [parameters={}]
+ * @return {*}  {string}
+ */
+function getEndpoint(base_uri, parameters = {}) {
+    return changeParameters(base_uri, parameters);
+}
+/**
+ *パラメータ置換
+ *
+ * @export
+ * @param {string} uri
+ * @param {{}} [parameters={[s: string]: string }]
+ * @return {*}  {string}
+ */
+function changeParameters(uri, parameters = {}) {
+    let new_uri = uri;
+    Object.keys(parameters).forEach((key) => {
+        if (new_uri.search(RegExp(`:${key}/|:${key}$`, "ig")) > -1) {
+            new_uri =
+                "/" +
+                    new_uri
+                        .replace(RegExp(`:${key}/|:${key}$`, "ig"), `${parameters[key] || ""}/`)
+                        .split("/")
+                        .filter(Boolean)
+                        .join("/");
+            delete parameters[key];
+        }
+    });
+    new_uri = removeParameters(new_uri);
+    if (Object.keys(parameters).length > 0)
+        new_uri += `?${createQueries(parameters)}`;
+    return new_uri.replace(/\/$/, "");
+}
+function removeParameters(uri) {
+    return uri.replace(/:[a-z]*\/|:[a-z]$/gi, "");
+}
+function getIndex(base_uri, parameters = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield send({
+            endpoint: getEndpoint(base_uri, parameters),
+            method: "GET",
+        });
+    });
+}
+function getShow(base_uri, parameters = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield send({
+            endpoint: getEndpoint(base_uri, parameters),
+            method: "GET",
+        });
+    });
+}
+function postStore(base_uri, body = {}, parameters = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return send({
+            endpoint: getEndpoint(base_uri, parameters),
+            body: JSON.stringify(body),
+            method: "POST",
+        });
+    });
+}
+function putUpdate(base_uri, body = {}, parameters = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield send({
+            endpoint: getEndpoint(base_uri, parameters),
+            body: JSON.stringify(body),
+            method: "PUT",
+        });
+    });
+}
+function deleteDestroy(base_uri, parameters = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield send({
+            endpoint: getEndpoint(base_uri, parameters),
+            method: "DELETE",
+        });
+    });
 }
 
 /**
@@ -358,9 +590,61 @@ function getQuery(key, path = undefined) {
     let queries = getQueries(path === undefined ? window.location.href : path);
     return queries[key];
 }
+class View {
+    constructor() {
+        this.routes = {
+            school: {
+                index: "/school/:school",
+            },
+        };
+    }
+    getRoute(routeName, parameters = {}) {
+        return getEndpoint(this.convertURI(routeName), parameters);
+    }
+    convertURI(routeName) {
+        const splited = routeName.split(".");
+        let route = "";
+        let routes = Object.assign({}, this.routes);
+        for (let i = 0; i < splited.length; ++i) {
+            if (!routes[splited[i]])
+                throw new Error("存在しないルートです");
+            if (!isString(routes[splited[i]])) {
+                routes = Object.assign({}, routes[splited[i]]);
+            }
+            else {
+                route = routes[splited[i]];
+            }
+        }
+        return `/${route.replace(/\/*/, "")}`.replace(/\/$/, "");
+    }
+    /**
+     * httpから取得
+     *
+     * @param {string} routeName
+     * @param {(ParametersInterface | any)} [parameters={}]
+     * @return {*}
+     * @memberof View
+     */
+    getFullUrl(routeName, parameters = {}) {
+        return `${window.location.protocol}//${window.location.hostname}${this.getRoute(routeName, parameters)}`;
+    }
+    /**
+     * 2つ目の/以降取得
+     *
+     * @param {string} routeName
+     * @param {(ParametersInterface | any)} [parameters={}]
+     * @memberof View
+     */
+    getUnderPath(routeName, parameters = {}) {
+        return `/${this.getRoute(routeName, parameters).replace(/\/[\S]*\//, "")}`;
+    }
+}
 
 var Functions = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    Model: Model,
+    View: View,
+    changeParameters: changeParameters,
     checkNonce: checkNonce,
     cookie: cookie,
     cookies: cookies,
@@ -368,11 +652,19 @@ var Functions = /*#__PURE__*/Object.freeze({
     createKey: createKey,
     createQueries: createQueries,
     date_format: date_format,
+    deleteDestroy: deleteDestroy,
+    getEndpoint: getEndpoint,
+    getIndex: getIndex,
     getQueries: getQueries,
     getQuery: getQuery,
+    getShow: getShow,
+    getStorage: getStorage,
     isString: isString,
     number_format: number_format,
+    postStore: postStore,
+    putUpdate: putUpdate,
     route: route,
+    saveStorage: saveStorage,
     sortJSON: sortJSON
 });
 
@@ -651,7 +943,49 @@ const Forms = {
     useFeedback: useFeedback,
 };
 
-const Component = Object.assign(Object.assign({}, Forms), Components);
+const localSlice = createSlice({
+    name: "local",
+    initialState: getStorage("local"),
+    reducers: {
+        addLocal(state, action) {
+            state[action.payload.key] = action.payload.value;
+        },
+        removeLocal(state, action) {
+            delete state[action.payload.key];
+        },
+    },
+});
+const { addLocal, removeLocal } = localSlice.actions;
+var reducer = localSlice.reducer;
+
+const store = configureStore({
+    reducer: {
+        local: reducer,
+    },
+});
+
+function Redux(props) {
+    return (jsx(Provider, Object.assign({ store: store }, { children: jsx(ReduxChildren, Object.assign({}, props)) })));
+}
+function ReduxChildren(props) {
+    const local = useSelector((state) => state.local);
+    React.useEffect(() => {
+        saveStorage("local", local);
+    }, [local]);
+    return jsx(Fragment, { children: props.children });
+}
+
+const Wrapper = {
+    Redux: {
+        Redux: Redux,
+        store: store,
+        reducer: reducer,
+        addLocal: addLocal,
+        removeLocal: removeLocal,
+    },
+};
+
+const Component = Object.assign(Object.assign(Object.assign({}, Forms), Components), Wrapper);
 
 const returnLibrary = Object.assign(Object.assign({}, Component), Functions);
 

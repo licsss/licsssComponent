@@ -36,3 +36,30 @@ export declare function getQueries(path: string): {
  * @return {*}  {(string | undefined)}
  */
 export declare function getQuery(key: string, path?: string | undefined): string | undefined;
+export interface RouteConfigInterface {
+    [s: string]: object | {};
+}
+export declare class View<ParametersInterface = {
+    [s: string]: string;
+}> {
+    protected routes: RouteConfigInterface;
+    getRoute(routeName: string, parameters?: ParametersInterface | any): string;
+    convertURI(routeName: string): string;
+    /**
+     * httpから取得
+     *
+     * @param {string} routeName
+     * @param {(ParametersInterface | any)} [parameters={}]
+     * @return {*}
+     * @memberof View
+     */
+    getFullUrl(routeName: string, parameters?: ParametersInterface | any): string;
+    /**
+     * 2つ目の/以降取得
+     *
+     * @param {string} routeName
+     * @param {(ParametersInterface | any)} [parameters={}]
+     * @memberof View
+     */
+    getUnderPath(routeName: string, parameters?: ParametersInterface | any): string;
+}
