@@ -2,10 +2,11 @@ export type ApiBaseType = {
     base_url?: string;
     endpoint: string;
     headers?: object;
-    nonceKey: string;
+    nonceKey?: string;
 };
+export type MethodType = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export type ApiType = ApiBaseType & {
-    method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    method?: MethodType;
     body?: BodyInit;
 };
 export type ResponseStatusType = {

@@ -9,6 +9,7 @@ declare const returnLibrary: {
         [s: string]: string;
     };
     getQuery(key: string, path?: string | undefined): string | undefined;
+    View: typeof Functions.View;
     cookies(): Record<string, string>;
     cookie(key?: string | undefined): string | Record<string, string> | undefined;
     createKey(): string;
@@ -16,12 +17,34 @@ declare const returnLibrary: {
     date_format(date?: string | Date | null | undefined, format?: string): string;
     number_format(number: number): string;
     sortJSON<T = object>(json: T): T;
+    saveStorage(key: string, value: any): void;
+    getStorage(key: string): any;
+    getEndpoint(base_uri: string, parameters?: {}): string;
+    changeParameters(uri: string, parameters?: {
+        [s: string]: string;
+    }): string;
+    getIndex<T_1 = Functions.ResponseType<Functions.ResponseIndexType<object>, string[] | {
+        [key: string]: string[];
+    }>>(base_uri: string, parameters?: Functions.IndexQuery): Promise<string | T_1>;
+    getShow<T_2 = Functions.ResponseType<object, string[] | {
+        [key: string]: string[];
+    }>>(base_uri: string, parameters?: {}): Promise<string | T_2>;
+    postStore<T_3 = Functions.ResponseType<object, string[] | {
+        [key: string]: string[];
+    }>>(base_uri: string, body?: {}, parameters?: {}): Promise<string | T_3>;
+    putUpdate<T_4 = Functions.ResponseType<object, string[] | {
+        [key: string]: string[];
+    }>>(base_uri: string, body?: {}, parameters?: {}): Promise<string | T_4>;
+    deleteDestroy<T_5 = Functions.ResponseType<object, string[] | {
+        [key: string]: string[];
+    }>>(base_uri: string, parameters?: {}): Promise<string | T_5>;
+    Model: typeof Functions.Model;
     Form: import("react").ForwardRefExoticComponent<import("./components/Form/Form").FormProps & import("react").RefAttributes<HTMLFormElement>>;
     FormNotification: import("react").ForwardRefExoticComponent<import("./components/Form/Form").FormNotificationProps>;
     FormContext: import("react").Context<import("./components/Form/Context").FormContextProps<Functions.ResponseType<object, string[] | {
         [key: string]: string[];
     }>>>;
-    useForm: <T_1>() => import("./components/Form/Context").UseFormProps<T_1>;
+    useForm: <T_6>() => import("./components/Form/Context").UseFormProps<T_6>;
     Control: import("react").ForwardRefExoticComponent<import("./components/Form/Control").FormControlProps & import("react").RefAttributes<HTMLInputElement | HTMLTextAreaElement>>;
     ControlWrapper: import("react").ForwardRefExoticComponent<import("./components/Form/ControlWrapper").FormControlWrapperProps>;
     ElementWrapper: import("react").ForwardRefExoticComponent<import("./components/Form/ElementWrapper").FormElementWrapperProps>;
@@ -47,5 +70,10 @@ declare const returnLibrary: {
     ModalHeader: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Header").ModalHeaderProps>;
     ModalBody: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Body").ModalBodyProps>;
     ModalFooter: import("react").ForwardRefExoticComponent<import("./components/Component/Modal/Footer").ModalFooterProps>;
+    Redux: {
+        Redux: (props: import("./components/Wrapper/Redux").ReduxProps) => import("react").ReactElement<any, string | import("react").JSXElementConstructor<any>>;
+        store: import("./components/Wrapper/Redux/store").StoreInterface;
+        reducer: import("redux").Reducer<any, import("redux").AnyAction>;
+    } & import("./components/Wrapper/Redux/reducer").ActionInterface;
 };
 export default returnLibrary;
