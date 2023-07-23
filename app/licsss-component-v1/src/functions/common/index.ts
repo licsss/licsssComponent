@@ -137,7 +137,6 @@ export function saveStorage(key: string, value: any): void {
  * @return {*}  {(any | object)}
  */
 export function getStorage(key: string): any | object {
-  console.log(window.localStorage.getItem(`licsss-storage-${key}`));
   try {
     return JSON.parse(
       window.localStorage.getItem(`licsss-storage-${key}`) || "{}"
