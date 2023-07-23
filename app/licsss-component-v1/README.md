@@ -32,10 +32,13 @@ licsssComponent
   ┃   ┃   ┣━ Select - a select with feedback
   ┃   ┃   ┣━ SelectWrapper - a select with label combining Select and ElementWrapper
   ┃   ┃   ┗━ index.ts - to export form components above
+  ┃   ┣━ Wrapper
+  ┃   ┃   ┗━ Redux - a component with Redux and save datas in local storage
   ┃   ┗━ index.ts - to export components above
   ┣━ functions
   ┃    ┣━ common - various functions (uncategoried below)
   ┃    ┣━ fetch - functions to connect with API
+  ┃    ┣━ models - functions for model connecting with API
   ┃    ┣━ route - functions for routing such as create view links, create queries, get queries and so on
   ┃    ┗━ index.ts - to export functions above
   ┗━ index.ts - to export components and functions above
@@ -55,4 +58,10 @@ Released under the MIT license
 - v1.1.0
   - 次のコンポーネント追加
     - Modal
-    - Paginate
+    - Pagination
+- v1.2.0
+  - 次のコンポーネントを追加
+    - Redux
+  - 次の関数を追加・修正
+    - models
+    - route
