@@ -47,3 +47,19 @@ export declare function number_format(number: number): string;
  * @return {*}  {object}
  */
 export declare function sortJSON<T = object>(json: T): T;
+/**
+ * ストレージ保存
+ *
+ * @export
+ * @param {string} key
+ * @param {*} value
+ */
+export declare function saveStorage(key: string, value: any): void;
+/**
+ * ストレージ取得
+ *
+ * @export
+ * @param {string} key
+ * @return {*}  {(any | object)}
+ */
+export declare function getStorage(key: string): any | object;

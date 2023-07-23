@@ -29,8 +29,9 @@ export default React.forwardRef(
           return "warning";
         case "exclamation":
           return "danger";
+        default:
+          return "primary";
       }
-      return "primary";
     }
     return (
       <Alert
