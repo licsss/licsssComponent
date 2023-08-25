@@ -2,7 +2,7 @@
   "name": "@licsss/licsss-component",
   "version": "1.2.0",
   "bugs": {
-    "url": "https://github.com/licsss-project/licsssComponent/issues",
+    "url": "https://github.com/licsss/licsssComponent/issues",
     "email": "postmaster@licsss.jp"
   },
   "license": "MIT",
@@ -19,7 +19,7 @@
   "icon": "https://app.licsss.jp/storage/icon/128x128.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/licsss-project/licsssComponent"
+    "url": "https://github.com/licsss/licsssComponent"
   },
   "type": "module",
   "dependencies": {
@@ -117,6 +117,7 @@
     "package.json",
     "README.md",
     "dist",
-    "static"
+    "static",
+    "LICENSE"
   ]
 }
